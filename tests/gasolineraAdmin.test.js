@@ -1,23 +1,34 @@
-import { recargarGasolina } from "../src/gasolineraAdmin.js";
+import { agregarGasolina } from "../src/gasolineraAdmin.js";
 
+describe("Administrador de Gasolinera", () => {
+    it("debería agregar gasolina a un surtidor existente", () => {
+        const surtidores = [{ id: 1, litros: 500 }];
+        agregarGasolina(surtidores, 1, 200);
 
-describe("Recargar gasolina en surtidores", () => {
-    it("debería recargar litros correctamente a un surtidor", () => {
-        const surtidores = [
-            { id: 1, litros: 500 },
-            { id: 2, litros: 300 }
-        ];
+        expect(surtidores[0].litros).toBe(700); // 500 + 200
+    });
 
-        const recargas = [
-            { id: 1, litros: 100 },
-            { id: 2, litros: 50 }
-        ];
+    it("debería lanzar error si el surtidor no existe", () => {
+        const surtidores = [{ id: 1, litros: 500 }];
         
-        const resultado = recargarGasolina(surtidores, recargas);
+        expect(() => {
+            agregarGasolina(surtidores, 2, 100);
+        }).toThrow("Surtidor no encontrado");
+    });
 
-        expect(resultado).toEqual([
-            { id: 1, litros: 600 }, 
-            { id: 2, litros: 350 }  
-        ]);
+    it("debería lanzar error si el valor a agregar no es un número válido", () => {
+        const surtidores = [{ id: 1, litros: 500 }];
+        
+        expect(() => {
+            agregarGasolina(surtidores, 1, "noEsUnNumero");
+        }).toThrow("Cantidad inválida");
+    });
+
+    it("debería lanzar error si el valor a agregar es negativo", () => {
+        const surtidores = [{ id: 1, litros: 500 }];
+        
+        expect(() => {
+            agregarGasolina(surtidores, 1, -50);
+        }).toThrow("Cantidad inválida");
     });
 });

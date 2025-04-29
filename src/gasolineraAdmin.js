@@ -1,12 +1,13 @@
-export function recargarGasolina(surtidores, recargas) {
-    return surtidores.map(surtidor => {
-        const recarga = recargas.find(r => r.id === surtidor.id);
-        if (recarga) {
-            return {
-                ...surtidor,
-                litros: surtidor.litros + recarga.litros
-            };
-        }
-        return surtidor;
-    });
+export function agregarGasolina(surtidores, id, cantidad) {
+    if (typeof cantidad !== "number" || cantidad <= 0) {
+        throw new Error("Cantidad inválida");
+    }
+
+    const surtidor = surtidores.find(s => s.id === id);
+
+    if (!surtidor) {
+        throw new Error("Surtidor no encontrado");
+    }
+
+    surtidor.litros += cantidad;
 }
