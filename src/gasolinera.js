@@ -1,6 +1,6 @@
-export default function gasolinera(click) {
+export default function gasolinera(click, litros = 1000) {
     if (click) {
-        return "1000 litros disponibles";
+        return `${litros} litros disponibles`;
     } else {
         return "Ver disponibilidad de gasolina";
     }
