@@ -10,4 +10,12 @@ export function agregarGasolina(surtidores, id, cantidad) {
     }
 
     surtidor.litros += cantidad;
+    
 }
+
+export function notificarCamionLlegado(callback) {
+    if (typeof callback === "function") {
+        callback("El camión de gasolina llegó 🚛");
+    }
+}
+

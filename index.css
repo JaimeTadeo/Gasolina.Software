@@ -15,3 +15,10 @@ button {
     font-size: 18px;
     color: #333;
 }
+
+#mensajeCamion {
+    margin-top: 1em;
+    font-weight: bold;
+    color: green;
+}
+
