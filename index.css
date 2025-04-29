@@ -10,7 +10,8 @@ button {
     cursor: pointer;
 }
 
-p {
-    margin-top: 20px;
+#resultado p {
+    margin-top: 15px;
     font-size: 18px;
+    color: #333;
 }

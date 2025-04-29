@@ -4,10 +4,25 @@ const boton = document.getElementById("mostrarDisponibilidad");
 const resultado = document.getElementById("resultado");
 
 let click = false;
-let litrosDisponibles = 1000; // Puedes cambiarlo para pruebas
+
+// Simulamos surtidores iniciales
+const surtidores = [
+    { id: 1, litros: 500 },
+    { id: 2, litros: 300 },
+    { id: 3, litros: 800 }
+];
 
 boton.addEventListener("click", () => {
     click = true;
-    const mensaje = gasolinera(click, litrosDisponibles);
-    resultado.textContent = mensaje;
+    const mensajes = gasolinera(click, surtidores); // Nos devolverá un array de mensajes
+
+    resultado.innerHTML = ""; // Limpiar resultados anteriores
+
+    mensajes.forEach(mensaje => {
+        const p = document.createElement("p");
+        p.textContent = mensaje;
+        resultado.appendChild(p);
+    });
+
+    boton.style.display = "none"; // Opcional, para ocultar el botón después de mostrar
 });
