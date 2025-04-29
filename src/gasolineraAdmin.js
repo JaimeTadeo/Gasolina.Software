@@ -1,16 +1,12 @@
 export function agregarGasolina(surtidores, id, cantidad) {
-    if (typeof cantidad !== "number" || cantidad <= 0) {
-        throw new Error("Cantidad inválida");
+    if (!surtidores[id]) {
+        throw new Error("El surtidor no existe.");
+    }
+    if (isNaN(cantidad) || cantidad <= 0) {
+        throw new Error("Cantidad inválida.");
     }
 
-    const surtidor = surtidores.find(s => s.id === id);
-
-    if (!surtidor) {
-        throw new Error("Surtidor no encontrado");
-    }
-
-    surtidor.litros += cantidad;
-    
+    surtidores[id].litros += cantidad;
 }
 
 export function notificarCamionLlegado(callback) {
