@@ -1,9 +1,21 @@
-export default function gasolinera(click, litros = 1000) {
+export default function gasolinera(click, data) {
     const precioLitro = 3.74;
-    if (click) {
-        const bolivianos = (litros * precioLitro).toFixed(2);
-        return `${litros} litros disponibles (${bolivianos} Bs)`;
+
+    if (Array.isArray(data)) { 
+        if (click) {
+            return data.map(surtidor => {
+                const bolivianos = (surtidor.litros * precioLitro).toFixed(2);
+                return `Surtidor ${surtidor.id}: ${surtidor.litros} litros disponibles (${bolivianos} Bs)`;
+            });
+        } else {
+            return "Ver disponibilidad de gasolina";
+        }
     } else {
-        return "Ver disponibilidad de gasolina";
+        if (click) {
+            const bolivianos = (data * precioLitro).toFixed(2);
+            return `${data} litros disponibles (${bolivianos} Bs)`;
+        } else {
+            return "Ver disponibilidad de gasolina";
+        }
     }
 }
