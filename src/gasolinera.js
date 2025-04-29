@@ -1,7 +1,7 @@
 export default function gasolinera(click, data) {
     const precioLitro = 3.74;
 
-    if (Array.isArray(data)) { 
+    if (Array.isArray(data)) {
         if (click) {
             return data.map(surtidor => {
                 const bolivianos = (surtidor.litros * precioLitro).toFixed(2);

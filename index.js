@@ -23,7 +23,12 @@ const surtidores = {
 };
 
 function renderizarSurtidores() {
-    const mensajes = gasolinera(true, surtidores);
+    const dataArray = Object.entries(surtidores).map(([id, s]) => ({
+        id,
+        litros: s.litros
+    }));
+
+    const mensajes = gasolinera(true, dataArray);
 
     resultado.innerHTML = "";
     mensajes.forEach(mensaje => {
@@ -61,7 +66,6 @@ botonCamion.addEventListener("click", () => {
         mensajeCamion.textContent = mensaje;
     });
 });
-
 
 function renderizarHorarios() {
     horariosSurtidores.innerHTML = "";
