@@ -73,7 +73,6 @@ function renderizarHorarios() {
     }
 }
 
-// Inicializar horarios
 renderizarHorarios();
 
 botonModificarHorario.addEventListener("click", () => {
