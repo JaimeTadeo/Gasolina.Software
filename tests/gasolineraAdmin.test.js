@@ -1,4 +1,5 @@
-import { recargarGasolina } from "../src/gasolineraAdmin";
+import { recargarGasolina } from "../src/gasolineraAdmin.js";
+
 
 describe("Recargar gasolina en surtidores", () => {
     it("debería recargar litros correctamente a un surtidor", () => {
@@ -6,6 +7,7 @@ describe("Recargar gasolina en surtidores", () => {
             { id: 1, litros: 500 },
             { id: 2, litros: 300 }
         ];
+
         const recargas = [
             { id: 1, litros: 100 },
             { id: 2, litros: 50 }
@@ -14,8 +16,8 @@ describe("Recargar gasolina en surtidores", () => {
         const resultado = recargarGasolina(surtidores, recargas);
 
         expect(resultado).toEqual([
-            { id: 1, litros: 600 },
-            { id: 2, litros: 350 }
+            { id: 1, litros: 600 }, 
+            { id: 2, litros: 350 }  
         ]);
     });
 });
