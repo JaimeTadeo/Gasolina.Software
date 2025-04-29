@@ -5,7 +5,6 @@ const resultado = document.getElementById("resultado");
 
 let click = false;
 
-// Simulamos surtidores iniciales
 const surtidores = [
     { id: 1, litros: 500 },
     { id: 2, litros: 300 },
@@ -14,9 +13,9 @@ const surtidores = [
 
 boton.addEventListener("click", () => {
     click = true;
-    const mensajes = gasolinera(click, surtidores); // Nos devolverá un array de mensajes
+    const mensajes = gasolinera(click, surtidores); 
 
-    resultado.innerHTML = ""; // Limpiar resultados anteriores
+    resultado.innerHTML = ""; 
 
     mensajes.forEach(mensaje => {
         const p = document.createElement("p");
@@ -24,5 +23,5 @@ boton.addEventListener("click", () => {
         resultado.appendChild(p);
     });
 
-    boton.style.display = "none"; // Opcional, para ocultar el botón después de mostrar
+    boton.style.display = "none"; 
 });
