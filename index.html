@@ -11,9 +11,11 @@
     <button id="mostrarDisponibilidad">Ver disponibilidad de gasolina</button>
     <div id="resultado"></div>
 
+    <div id="horariosSurtidores"></div>
+
     <div id="mensajeCamion"></div>
 
-
+    
     <hr>
 
     <h2>Administrador</h2>
@@ -29,6 +31,22 @@
     <div id="error"></div>
 
     <button id="notificarCamion">Notificar llegada del camión</button>
+
+    <h3>Modificar horarios de surtidor</h3>
+
+    <label for="surtidorHorarioId">ID de Surtidor:</label>
+    <input type="number" id="surtidorHorarioId" />
+
+    <label for="nuevaApertura">Nuevo horario de apertura (HH:MM):</label>
+    <input type="text" id="nuevaApertura" placeholder="Ej: 07:00" />
+
+    <label for="nuevoCierre">Nuevo horario de cierre (HH:MM):</label>
+    <input type="text" id="nuevoCierre" placeholder="Ej: 19:00" />
+
+    <button id="modificarHorario">Modificar horario</button>
+
+    <div id="errorHorario"></div>
+
 
 
     <script type="module" src="index.js"></script>

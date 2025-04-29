@@ -22,3 +22,14 @@ button {
     color: green;
 }
 
+#errorHorario {
+    color: red;
+    margin-top: 0.5em;
+}
+
+#horariosSurtidores {
+    margin-top: 1em;
+    font-style: italic;
+}
+
+

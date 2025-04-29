@@ -19,3 +19,18 @@ export function notificarCamionLlegado(callback) {
     }
 }
 
+export function modificarHorario(surtidores, id, apertura, cierre) {
+    if (!surtidores[id]) {
+        throw new Error("Surtidor no encontrado");
+    }
+    if (apertura >= cierre) {
+        throw new Error("El horario de apertura debe ser antes del de cierre");
+    }
+    surtidores[id].horario = {
+        apertura,
+        cierre
+    };
+}
+
+
+
