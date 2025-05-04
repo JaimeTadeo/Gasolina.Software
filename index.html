@@ -8,19 +8,18 @@
 <body>
     <h1>Gasolinera</h1>
 
+    <!-- Usuario -->
     <button id="mostrarDisponibilidad">Ver disponibilidad de gasolina</button>
-    
     <div id="resultado"></div>
-
     <div id="horariosSurtidores"></div>
-
     <div id="mensajeCamion"></div>
 
-    
     <hr>
 
+    <!-- Administrador -->
     <h2>Administrador</h2>
 
+    <!-- Agregar gasolina -->
     <label for="surtidorId">ID de Surtidor:</label>
     <input type="number" id="surtidorId" />
 
@@ -28,11 +27,12 @@
     <input type="number" id="cantidadLitros" />
 
     <button id="agregarGasolina">Agregar gasolina</button>
-
     <div id="error"></div>
 
+    <!-- Notificar llegada del camión -->
     <button id="notificarCamion">Notificar llegada del camión</button>
 
+    <!-- Modificar horario -->
     <h3>Modificar horarios de surtidor</h3>
 
     <label for="surtidorHorarioId">ID de Surtidor:</label>
@@ -45,10 +45,20 @@
     <input type="text" id="nuevoCierre" placeholder="Ej: 19:00" />
 
     <button id="modificarHorario">Modificar horario</button>
-
     <div id="errorHorario"></div>
 
+    <hr>
 
+    <!-- Opinión del Cliente -->
+    <h2>Opinión del Cliente</h2>
+
+    <label for="surtidorOpinionId">ID de Surtidor:</label>
+    <input type="number" id="surtidorOpinionId" />
+
+    <button id="calificarAgradable">Calificar como Agradable</button>
+    <button id="calificarDesagradable">Calificar como Desagradable</button>
+
+    <div id="mensajeOpinion"></div>
 
     <script type="module" src="index.js"></script>
 </body>
