@@ -1,65 +1,175 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Gasolinera</title>
-    <link rel="stylesheet" href="index.css">
-</head>
-<body>
-    <h1>Gasolinera</h1>
+import gasolinera from "./src/gasolinera.js";
+import { agregarGasolina } from "./src/gasolineraAdmin.js";
+import { notificarCamionLlegado } from "./src/gasolineraAdmin.js";
+import { modificarHorario } from "./src/gasolineraAdmin.js";
 
-    <!-- Usuario -->
-    <button id="mostrarDisponibilidad">Ver disponibilidad de gasolina</button>
-    <div id="resultado"></div>
-    <div id="horariosSurtidores"></div>
-    <div id="mensajeCamion"></div>
+const boton = document.getElementById("mostrarDisponibilidad");
+const resultado = document.getElementById("resultado");
+const botonAdmin = document.getElementById("agregarGasolina");
+const inputSurtidor = document.getElementById("surtidorId");
+const inputCantidad = document.getElementById("cantidadLitros");
+const errorDiv = document.getElementById("error");
+const mensajeCamion = document.getElementById("mensajeCamion");
+const botonCamion = document.getElementById("notificarCamion");
+const horariosSurtidores = document.getElementById("horariosSurtidores");
+const botonModificarHorario = document.getElementById("modificarHorario");
+const errorHorario = document.getElementById("errorHorario");
 
-    <hr>
+const inputFila = document.getElementById("numeroPersonas");
+const botonFila = document.getElementById("informarFila");
+const mensajeFila = document.getElementById("mensajeFila");
+const infoFilaSugerencias = document.getElementById("infoFilaSugerencias");
+const inputSurtidorFila = document.getElementById("surtidorFilaId");
 
-    <!-- Administrador -->
-    <h2>Administrador</h2>
+let click = false;
 
-    <!-- Agregar gasolina -->
-    <label for="surtidorId">ID de Surtidor:</label>
-    <input type="number" id="surtidorId" />
+const surtidores = {
+    1: {
+        litros: 1000,
+        horario: { apertura: "08:00", cierre: "20:00" },
+        fila: 0,
+        historicoFilas: []
+    },
+    2: {
+        litros: 800,
+        horario: { apertura: "09:00", cierre: "18:00" },
+        fila: 0,
+        historicoFilas: []
+    }
+};
 
-    <label for="cantidadLitros">Cantidad de litros a agregar:</label>
-    <input type="number" id="cantidadLitros" />
+function renderizarSurtidores() {
+    const dataArray = Object.entries(surtidores).map(([id, s]) => ({
+        id,
+        litros: s.litros
+    }));
 
-    <button id="agregarGasolina">Agregar gasolina</button>
-    <div id="error"></div>
+    const mensajes = gasolinera(true, dataArray);
 
-    <!-- Notificar llegada del camión -->
-    <button id="notificarCamion">Notificar llegada del camión</button>
+    resultado.innerHTML = "";
+    mensajes.forEach(mensaje => {
+        const p = document.createElement("p");
+        p.textContent = mensaje;
+        resultado.appendChild(p);
+    });
+}
 
-    <!-- Modificar horario -->
-    <h3>Modificar horarios de surtidor</h3>
+function renderizarHorarios() {
+    horariosSurtidores.innerHTML = "";
+    for (const id in surtidores) {
+        const surtidor = surtidores[id];
+        const div = document.createElement("div");
+        div.textContent = `Surtidor ${id}: Apertura ${surtidor.horario.apertura}, Cierre ${surtidor.horario.cierre}`;
+        horariosSurtidores.appendChild(div);
+    }
+}
 
-    <label for="surtidorHorarioId">ID de Surtidor:</label>
-    <input type="number" id="surtidorHorarioId" />
+function calcularHoraPico(surtidor) {
+    const frecuencias = {};
+    surtidor.historicoFilas.forEach(entry => {
+        const hora = entry.hora;
+        if (!frecuencias[hora]) frecuencias[hora] = 0;
+        frecuencias[hora] += entry.numero;
+    });
 
-    <label for="nuevaApertura">Nuevo horario de apertura (HH:MM):</label>
-    <input type="text" id="nuevaApertura" placeholder="Ej: 07:00" />
+    let max = 0;
+    let horaPico = "";
+    for (const h in frecuencias) {
+        if (frecuencias[h] > max) {
+            max = frecuencias[h];
+            horaPico = h;
+        }
+    }
+    return horaPico;
+}
 
-    <label for="nuevoCierre">Nuevo horario de cierre (HH:MM):</label>
-    <input type="text" id="nuevoCierre" placeholder="Ej: 19:00" />
+boton.addEventListener("click", () => {
+    click = true;
+    renderizarSurtidores();
+    boton.style.display = "none";
+});
 
-    <button id="modificarHorario">Modificar horario</button>
-    <div id="errorHorario"></div>
+botonAdmin.addEventListener("click", () => {
+    const id = parseInt(inputSurtidor.value, 10);
+    const cantidad = parseFloat(inputCantidad.value);
 
-    <hr>
+    errorDiv.textContent = "";
 
-    <!-- Opinión del Cliente -->
-    <h2>Opinión del Cliente</h2>
+    try {
+        agregarGasolina(surtidores, id, cantidad);
+        renderizarSurtidores();
+        inputSurtidor.value = "";
+        inputCantidad.value = "";
+    } catch (error) {
+        errorDiv.textContent = error.message;
+        errorDiv.style.color = "red";
+    }
+});
 
-    <label for="surtidorOpinionId">ID de Surtidor:</label>
-    <input type="number" id="surtidorOpinionId" />
+botonCamion.addEventListener("click", () => {
+    notificarCamionLlegado((mensaje) => {
+        mensajeCamion.textContent = mensaje;
+    });
+});
 
-    <button id="calificarAgradable">Calificar como Agradable</button>
-    <button id="calificarDesagradable">Calificar como Desagradable</button>
+botonModificarHorario.addEventListener("click", () => {
+    const id = parseInt(document.getElementById("surtidorHorarioId").value);
+    const apertura = document.getElementById("nuevaApertura").value;
+    const cierre = document.getElementById("nuevoCierre").value;
 
-    <div id="mensajeOpinion"></div>
+    try {
+        modificarHorario(surtidores, id, apertura, cierre);
+        errorHorario.textContent = "";
+        renderizarHorarios();
+    } catch (error) {
+        errorHorario.textContent = error.message;
+    }
+});
 
-    <script type="module" src="index.js"></script>
-</body>
-</html>
+botonFila.addEventListener("click", () => {
+    const numero = parseInt(inputFila.value);
+    const id = parseInt(inputSurtidorFila.value);
+    const horaActual = new Date().toTimeString().slice(0, 5);
+
+    if (isNaN(numero) || numero < 0 || isNaN(id) || !surtidores[id]) {
+        mensajeFila.textContent = "Por favor ingresa datos válidos.";
+        mensajeFila.style.color = "red";
+        return;
+    }
+
+    surtidores[id].fila = numero;
+    surtidores[id].historicoFilas.push({ numero, hora: horaActual });
+
+    let mensaje = "";
+    if (numero === 0) {
+        mensaje = "No hay personas en la fila.";
+    } else if (numero <= 3) {
+        mensaje = `Hay pocas personas en la fila (${numero}).`;
+    } else if (numero <= 6) {
+        mensaje = `Hay una fila moderada (${numero} personas).`;
+    } else {
+        mensaje = `La fila está larga (${numero} personas).`;
+    }
+
+    mensajeFila.textContent = mensaje;
+    mensajeFila.style.color = "green";
+
+    // Notificación adicional
+    let mayorFila = -1;
+    let surtidorMasLleno = null;
+    for (const s in surtidores) {
+        if (surtidores[s].fila > mayorFila) {
+            mayorFila = surtidores[s].fila;
+            surtidorMasLleno = s;
+        }
+    }
+
+    const horaPico = calcularHoraPico(surtidores[id]);
+    infoFilaSugerencias.innerHTML = `
+        <p>El surtidor con mayor fila actual es el número ${surtidorMasLleno} (${mayorFila} personas).</p>
+        <p>Hora pico estimada del surtidor ${id}: ${horaPico || "Aún no hay suficiente información"}.</p>
+        <p>Se recomienda evitar esta hora si es posible. Intenta venir más temprano o más tarde.</p>
+    `;
+});
+
+renderizarHorarios();

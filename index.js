@@ -15,77 +15,33 @@ const horariosSurtidores = document.getElementById("horariosSurtidores");
 const botonModificarHorario = document.getElementById("modificarHorario");
 const errorHorario = document.getElementById("errorHorario");
 
-// NUEVO: elementos para notificar estado de la fila
+// NUEVO: elementos para notificar estado de la fila y recomendaciones
 const filaEstado = document.createElement("div");
 filaEstado.innerHTML = `
     <h3>Clientes</h3>
     <label for="numeroPersonas">¿Cuántas personas hay en la fila?</label>
     <input type="number" id="numeroPersonas" min="0" />
+    <select id="surtidorSeleccionado">
+        <option value="1">Surtidor 1</option>
+        <option value="2">Surtidor 2</option>
+    </select>
     <button id="informarFila">Informar estado de la fila</button>
     <div id="mensajeFila"></div>
+    <div id="recomendacionSurtidor"></div>
 `;
 document.body.appendChild(filaEstado);
 
 const inputFila = document.getElementById("numeroPersonas");
 const botonFila = document.getElementById("informarFila");
 const mensajeFila = document.getElementById("mensajeFila");
-
-// NUEVO: lógica para calificar atención
-const botonCalificarAgradable = document.getElementById("calificarAgradable");
-const botonCalificarDesagradable = document.getElementById("calificarDesagradable");
-const inputOpinionId = document.getElementById("surtidorOpinionId");
-const mensajeOpinion = document.getElementById("mensajeOpinion");
-
-const opiniones = {};  // {1: {agradable: 0, desagradable: 0}, ...}
-
-function registrarOpinion(id, tipo) {
-    if (!opiniones[id]) {
-        opiniones[id] = { agradable: 0, desagradable: 0 };
-    }
-    opiniones[id][tipo]++;
-}
-
-function mostrarOpinion(id) {
-    const o = opiniones[id];
-    if (!o) {
-        mensajeOpinion.textContent = `No hay opiniones registradas para el surtidor ${id}.`;
-        mensajeOpinion.style.color = "gray";
-        return;
-    }
-
-    mensajeOpinion.textContent = `Surtidor ${id} - Agradable: ${o.agradable}, Desagradable: ${o.desagradable}`;
-    mensajeOpinion.style.color = "green";
-}
-
-botonCalificarAgradable.addEventListener("click", () => {
-    const id = parseInt(inputOpinionId.value);
-    if (isNaN(id) || !surtidores[id]) {
-        mensajeOpinion.textContent = "Ingresa un ID de surtidor válido.";
-        mensajeOpinion.style.color = "red";
-        return;
-    }
-
-    registrarOpinion(id, "agradable");
-    mostrarOpinion(id);
-});
-
-botonCalificarDesagradable.addEventListener("click", () => {
-    const id = parseInt(inputOpinionId.value);
-    if (isNaN(id) || !surtidores[id]) {
-        mensajeOpinion.textContent = "Ingresa un ID de surtidor válido.";
-        mensajeOpinion.style.color = "red";
-        return;
-    }
-
-    registrarOpinion(id, "desagradable");
-    mostrarOpinion(id);
-});
+const selectSurtidor = document.getElementById("surtidorSeleccionado");
+const recomendacionDiv = document.getElementById("recomendacionSurtidor");
 
 let click = false;
 
 const surtidores = {
-    1: { litros: 1000, horario: { apertura: "08:00", cierre: "20:00" } },
-    2: { litros: 800, horario: { apertura: "09:00", cierre: "18:00" } }
+    1: { litros: 1000, horario: { apertura: "08:00", cierre: "20:00" }, filas: [] },
+    2: { litros: 800, horario: { apertura: "09:00", cierre: "18:00" }, filas: [] }
 };
 
 function renderizarSurtidores() {
@@ -159,26 +115,54 @@ botonModificarHorario.addEventListener("click", () => {
     }
 });
 
-// lógica para mostrar estado de la fila
+// NUEVO: lógica para notificar sobre filas, hora pico y sugerencias
 botonFila.addEventListener("click", () => {
     const numero = parseInt(inputFila.value);
+    const id = parseInt(selectSurtidor.value);
+
     if (isNaN(numero) || numero < 0) {
         mensajeFila.textContent = "Por favor ingresa un número válido de personas.";
         mensajeFila.style.color = "red";
         return;
     }
 
+    surtidores[id].filas.push({ personas: numero, hora: new Date() });
+
     let mensaje = "";
     if (numero === 0) {
-        mensaje = "No hay personas en la fila.";
+        mensaje = `Surtidor ${id}: No hay personas en la fila.`;
     } else if (numero <= 3) {
-        mensaje = `Hay pocas personas en la fila (${numero}).`;
+        mensaje = `Surtidor ${id}: Pocas personas en la fila (${numero}).`;
     } else if (numero <= 6) {
-        mensaje = `Hay una fila moderada (${numero} personas).`;
+        mensaje = `Surtidor ${id}: Fila moderada (${numero} personas).`;
     } else {
-        mensaje = `La fila está larga (${numero} personas).`;
+        mensaje = `Surtidor ${id}: ¡Fila muy larga! (${numero} personas).`;
     }
 
     mensajeFila.textContent = mensaje;
     mensajeFila.style.color = "green";
+
+    // Calcular cuál surtidor tiene más fila actualmente
+    const surtidorMasLleno = Object.entries(surtidores).reduce((a, b) => {
+        return (a[1].filas.slice(-1)[0]?.personas || 0) > (b[1].filas.slice(-1)[0]?.personas || 0) ? a : b;
+    });
+
+    const nombreMasLleno = surtidorMasLleno[0];
+    const filaMasLleno = surtidorMasLleno[1].filas.slice(-1)[0]?.personas || 0;
+
+    // Calcular hora pico (más personas) y hora baja (menos personas)
+    const historial = surtidores[id].filas;
+    if (historial.length > 1) {
+        const horaPico = historial.reduce((a, b) => (a.personas > b.personas ? a : b));
+        const horaBaja = historial.reduce((a, b) => (a.personas < b.personas ? a : b));
+
+        recomendacionDiv.innerHTML = `
+            <p>Recomendación:</p>
+            <ul>
+                <li>El surtidor más lleno ahora es el ${nombreMasLleno} con ${filaMasLleno} personas.</li>
+                <li>Hora pico estimada del surtidor ${id}: ${horaPico.hora.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} (${horaPico.personas} personas)</li>
+                <li>Hora baja estimada del surtidor ${id}: ${horaBaja.hora.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} (${horaBaja.personas} personas)</li>
+            </ul>
+        `;
+    }
 });
