@@ -1,64 +1,82 @@
-import { agregarGasolina } from "../src/gasolineraAdmin.js";
-import {notificarCamionLlegado} from "../src/gasolineraAdmin.js";
-import { modificarHorario } from "../src/gasolineraAdmin.js";
+import { gestionarSurtidoresFavoritos, notificarDisponibilidad } from "../src/gasolineraNotificaciones.js";
 
-describe("Administrador de Gasolinera", () => {
-    it("debería agregar gasolina a un surtidor existente", () => {
-        const surtidores = [{ id: 1, litros: 500 }];
-        agregarGasolina(surtidores, 1, 200);
+describe("Notificaciones para surtidores favoritos", () => {
+    // Datos de prueba comunes
+    const surtidores = [
+        { id: 1, litros: 0, nombre: "Surtidor Premium" },
+        { id: 2, litros: 100, nombre: "Surtidor Regular" },
+        { id: 3, litros: 50, nombre: "Surtidor Diesel" }
+    ];
+    const clienteId = "cliente-123";
 
-        expect(surtidores[0].litros).toBe(700); 
+    beforeEach(() => {
+        // Limpiar el estado antes de cada test
+        gestionarSurtidoresFavoritos(clienteId, null, "limpiar");
     });
 
-    it("debería lanzar error si el surtidor no existe", () => {
-        const surtidores = [{ id: 1, litros: 500 }];
-        
-        expect(() => {
-            agregarGasolina(surtidores, 2, 100);
-        }).toThrow("Surtidor no encontrado");
+    describe("gestionarSurtidoresFavoritos", () => {
+        it("debería agregar un surtidor a favoritos", () => {
+            gestionarSurtidoresFavoritos(clienteId, 2, "agregar");
+            const favoritos = gestionarSurtidoresFavoritos(clienteId);
+            expect(favoritos).toContain(2);
+        });
+
+        it("debería eliminar un surtidor de favoritos", () => {
+            gestionarSurtidoresFavoritos(clienteId, 2, "agregar");
+            gestionarSurtidoresFavoritos(clienteId, 2, "eliminar");
+            const favoritos = gestionarSurtidoresFavoritos(clienteId);
+            expect(favoritos).not.toContain(2);
+        });
+
+        it("debería limpiar todos los favoritos", () => {
+            gestionarSurtidoresFavoritos(clienteId, 1, "agregar");
+            gestionarSurtidoresFavoritos(clienteId, 2, "agregar");
+            gestionarSurtidoresFavoritos(clienteId, null, "limpiar");
+            const favoritos = gestionarSurtidoresFavoritos(clienteId);
+            expect(favoritos).toHaveLength(0);
+        });
+
+        it("debería devolver lista vacía para cliente sin favoritos", () => {
+            const favoritos = gestionarSurtidoresFavoritos("cliente-nuevo");
+            expect(favoritos).toEqual([]);
+        });
     });
 
-    it("debería lanzar error si el valor a agregar no es un número válido", () => {
-        const surtidores = [{ id: 1, litros: 500 }];
-        
-        expect(() => {
-            agregarGasolina(surtidores, 1, "noEsUnNumero");
-        }).toThrow("Cantidad inválida");
-    });
+    describe("notificarDisponibilidad", () => {
+        it("debería notificar cuando surtidor favorito tiene gasolina", () => {
+            const mockCallback = jest.fn();
+            gestionarSurtidoresFavoritos(clienteId, 2, "agregar");
 
-    it("debería lanzar error si el valor a agregar es negativo", () => {
-        const surtidores = [{ id: 1, litros: 500 }];
-        
-        expect(() => {
-            agregarGasolina(surtidores, 1, -50);
-        }).toThrow("Cantidad inválida");
-    });
-});
+            notificarDisponibilidad(surtidores, clienteId, mockCallback);
 
-describe("Gasolinera Admin", () => {
-    it("debería notificar que el camión llegó", () => {
-        const mockCallback = jest.fn();
-        notificarCamionLlegado(mockCallback);
-        expect(mockCallback).toHaveBeenCalledWith("El camión de gasolina llegó 🚛");
-    });
-});
+            expect(mockCallback).toHaveBeenCalledWith(
+                expect.stringContaining("Surtidor 2 (Surtidor Regular) tiene gasolina disponible: 100 litros.")
+            );
+        });
 
-describe("Gasolinera Admin - Modificar horario", () => {
-    const surtidores = {
-        1: { litros: 1000, horario: { apertura: "08:00", cierre: "20:00" } },
-    };
+        it("no debería notificar cuando surtidor favorito no tiene gasolina", () => {
+            const mockCallback = jest.fn();
+            gestionarSurtidoresFavoritos(clienteId, 1, "agregar");
 
-    it("debería modificar los horarios correctamente", () => {
-        modificarHorario(surtidores, 1, "07:00", "19:00");
-        expect(surtidores[1].horario.apertura).toBe("07:00");
-        expect(surtidores[1].horario.cierre).toBe("19:00");
-    });
+            notificarDisponibilidad(surtidores, clienteId, mockCallback);
 
-    it("debería lanzar error si el horario de apertura es después o igual al de cierre", () => {
-        expect(() => modificarHorario(surtidores, 1, "21:00", "20:00")).toThrow("El horario de apertura debe ser antes del de cierre");
-    });
+            expect(mockCallback).not.toHaveBeenCalled();
+        });
 
-    it("debería lanzar error si el surtidor no existe", () => {
-        expect(() => modificarHorario(surtidores, 999, "07:00", "19:00")).toThrow("Surtidor no encontrado");
+        it("debería notificar múltiples surtidores con gasolina", () => {
+            const mockCallback = jest.fn();
+            gestionarSurtidoresFavoritos(clienteId, 2, "agregar");
+            gestionarSurtidoresFavoritos(clienteId, 3, "agregar");
+
+            notificarDisponibilidad(surtidores, clienteId, mockCallback);
+
+            expect(mockCallback).toHaveBeenCalledTimes(2);
+        });
+
+        it("no debería notificar si cliente no tiene favoritos", () => {
+            const mockCallback = jest.fn();
+            notificarDisponibilidad(surtidores, "cliente-sin-favoritos", mockCallback);
+            expect(mockCallback).not.toHaveBeenCalled();
+        });
     });
 });
