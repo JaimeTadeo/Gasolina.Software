@@ -38,5 +38,29 @@ export function modificarHorario(surtidores, id, apertura, cierre) {
     };
 }
 
+let estadoFilas = {};
 
+export function reportarFila(surtidores, idSurtidor, personas) {
+    if (isNaN(personas) || personas < 0) {
+        throw new Error("Número de personas inválido");
+    }
+    
+    if (!surtidores[idSurtidor]) {
+        throw new Error("Surtidor no existe");
+    }
+
+    // Añadir el reporte al historial del surtidor
+    surtidores[idSurtidor].filas.push({
+        personas: personas,
+        hora: new Date()
+    });
+}
+
+export function obtenerReporteFilas(surtidores) {
+    return surtidores;
+}
+
+export function notificarAdministrador(mensaje) {
+    console.log(`[ADMIN] ${mensaje}`);
+}
 
