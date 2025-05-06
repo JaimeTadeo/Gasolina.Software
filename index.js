@@ -1,4 +1,5 @@
 import gasolinera from "./src/gasolinera.js";
+import { generarTicket } from "./src/ticket.js";
 import { calificarSurtidor, obtenerCalificaciones } from "./src/gasolineraAdmin.js";
 import { 
     agregarGasolina, 
@@ -8,7 +9,15 @@ import {
     obtenerReporteFilas,
     notificarAdministrador 
 } from "./src/gasolineraAdmin.js";
+import { reportarSurtidorSinGasolina } from './src/reportarSurtidor.js';
 
+document.querySelectorAll('.btn-reportar').forEach(boton => {
+  boton.addEventListener('click', () => {
+    const idSurtidor = boton.id.split('-')[2]; // Extrae "S1" o "S2"
+    reportarSurtidorSinGasolina(idSurtidor);
+    alert(`Surtidor ${idSurtidor} reportado sin gasolina`);
+  });
+});
 const boton = document.getElementById("mostrarDisponibilidad");
 const resultado = document.getElementById("resultado");
 const botonAdmin = document.getElementById("agregarGasolina");
@@ -24,6 +33,11 @@ const errorHorario = document.getElementById("errorHorario");
 const botonTicket = document.getElementById("solicitarTicket");
 const numeroTicketSpan = document.getElementById("numeroTicket");
 
+botonTicket.addEventListener("click", () => {
+    const numero = generarTicket(); // Usa la función de ticket.js
+    numeroTicketSpan.textContent = numero;
+  });
+  
 // Elementos para gestión de filas
 const filaEstado = document.createElement("div");
 filaEstado.innerHTML = `
