@@ -40,7 +40,7 @@ export function modificarHorario(surtidores, id, apertura, cierre) {
     };
 }
 
-// --------------------------------------------------
+// --------------------------------------------------------------------
 function agregarListenersDeReporte() {
     const botonesReportar = document.querySelectorAll('.btn-reportar');
   
