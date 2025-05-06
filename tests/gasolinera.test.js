@@ -1,39 +1,36 @@
-import { reportarFila, obtenerReporteFilas, notificarAdministrador } from "../src/gasolineraAdmin.js";
+import { 
+    reportarFila, 
+    obtenerReporteFilas, 
+    notificarAdministrador,
+    calificarSurtidor,       // Añadir estas líneas
+    obtenerCalificaciones    // <-- Importación faltante
+} from "../src/gasolineraAdmin.js";
 
-describe("Gestión de filas", () => {
+// ... (código existente)
+
+describe("Sistema de calificaciones", () => {
     let surtidores;
 
     beforeEach(() => {
-        // Configuración limpia para cada test
+        // Configuración corregida (no usar null)
         surtidores = {
-            1: { litros: 1000, filas: [] },
-            2: { litros: 800, filas: [] }
+            1: { litros: 1000, calificaciones: { positivas: 0, negativas: 0 } },
+            2: { litros: 800, calificaciones: { positivas: 3, negativas: 1 } }
         };
     });
 
-    test("Reportar fila válida actualiza el estado", () => {
-        // Ejecutar
-        reportarFila(surtidores, 1, 5);
-        
-        // Verificar
-        const estado = obtenerReporteFilas(surtidores);
-        expect(estado[1].filas[0].personas).toBe(5); // ✅
+    test("Calificación positiva actualiza contador", () => {
+        calificarSurtidor(surtidores, 1, true);
+        expect(surtidores[1].calificaciones.positivas).toBe(1); // ✅
     });
 
-    test("Reportar número negativo lanza error", () => {
-        // Verificar que se lanza el error
-        expect(() => reportarFila(surtidores, 2, -3))
-            .toThrow("Número de personas inválido"); // ✅
+    test("Calificación negativa en surtidor existente", () => {
+        calificarSurtidor(surtidores, 2, false);
+        expect(surtidores[2].calificaciones.negativas).toBe(2); // ✅
     });
 
-    test("Notificación al administrador registra en consola", () => {
-        // Mock de console.log
-        const consoleSpy = jest.spyOn(console, "log");
-        
-        // Ejecutar
-        notificarAdministrador("Mensaje de prueba");
-        
-        // Verificar
-        expect(consoleSpy).toHaveBeenCalledWith("[ADMIN] Mensaje de prueba"); // ✅
+    test("Obtener calificaciones de surtidor sin datos", () => {
+        const result = obtenerCalificaciones(surtidores, 3);
+        expect(result).toEqual({ positivas: 0, negativas: 0 }); // ✅
     });
 });

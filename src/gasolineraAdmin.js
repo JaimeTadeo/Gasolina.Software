@@ -64,3 +64,18 @@ export function notificarAdministrador(mensaje) {
     console.log(`[ADMIN] ${mensaje}`);
 }
 
+export function calificarSurtidor(surtidores, id, esPositiva) {
+    if (!surtidores[id]) throw new Error("Surtidor no existe");
+    
+    // Inicializar si no existe
+    if (!surtidores[id].calificaciones) {
+        surtidores[id].calificaciones = { positivas: 0, negativas: 0 };
+    }
+    
+    esPositiva ? surtidores[id].calificaciones.positivas++ 
+               : surtidores[id].calificaciones.negativas++;
+}
+
+export function obtenerCalificaciones(surtidores, id) {
+    return surtidores[id]?.calificaciones || { positivas: 0, negativas: 0 };
+}

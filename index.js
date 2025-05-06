@@ -1,4 +1,5 @@
 import gasolinera from "./src/gasolinera.js";
+import { calificarSurtidor, obtenerCalificaciones } from "./src/gasolineraAdmin.js";
 import { 
     agregarGasolina, 
     notificarCamionLlegado, 
@@ -197,4 +198,47 @@ function formatoHoraAmigable(fecha) {
         minute: "2-digit",
         hour12: true
     });
+
+// Nuevos elementos
+const btnPositivo = document.getElementById("btnPositivo");
+const btnNegativo = document.getElementById("btnNegativo");
+const selectCalificacion = document.getElementById("surtidorCalificacion");
+const mensajeCalificacion = document.getElementById("mensajeCalificacion");
+const estadoCalificaciones = document.getElementById("estadoCalificaciones");
+
+// Eventos de calificación
+btnPositivo.addEventListener("click", () => manejarCalificacion(true));
+btnNegativo.addEventListener("click", () => manejarCalificacion(false));
+
+function manejarCalificacion(esPositiva) {
+    try {
+        const id = parseInt(selectCalificacion.value);
+        calificarSurtidor(surtidores, id, esPositiva);
+        
+        // Actualizar UI
+        const calificaciones = obtenerCalificaciones(surtidores, id);
+        const porcentaje = calcularPorcentaje(calificaciones);
+        
+        mensajeCalificacion.innerHTML = `
+            <span style="color: green;">✓ Calificación registrada</span>
+        `;
+        
+        estadoCalificaciones.innerHTML = `
+            <p>Surtidor ${id}:</p>
+            <progress value="${porcentaje}" max="100"></progress>
+            <span>${porcentaje.toFixed(1)}% aprobación</span>
+            <p>👍 ${calificaciones.positivas} | 👎 ${calificaciones.negativas}</p>
+        `;
+        
+    } catch (error) {
+        mensajeCalificacion.innerHTML = `
+            <span style="color: red;">✗ Error: ${error.message}</span>
+        `;
+    }
+}
+
+function calcularPorcentaje(calificaciones) {
+    const total = calificaciones.positivas + calificaciones.negativas;
+    return total > 0 ? (calificaciones.positivas / total) * 100 : 0;
+ }
 }

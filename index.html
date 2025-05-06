@@ -8,19 +8,37 @@
 <body>
     <h1>Gasolinera</h1>
 
-    <!-- Usuario -->
-    <button id="mostrarDisponibilidad">Ver disponibilidad de gasolina</button>
-    <div id="resultado"></div>
-    <div id="horariosSurtidores"></div>
-    <div id="mensajeCamion"></div>
+    <!-- Sección para el Usuario -->
+    <section class="seccion-cliente">
+        <h2>Usuario</h2>
+
+        <!-- Ver disponibilidad -->
+        <button id="mostrarDisponibilidad">Ver disponibilidad de gasolina</button>
+        <div id="resultado"></div>
+        <div id="horariosSurtidores"></div>
+
+        <!-- Calificar atención -->
+        <h3>Calificar atención</h3>
+        <label for="surtidorCalificacion">Selecciona surtidor:</label>
+        <select id="surtidorCalificacion">
+            <option value="1">Surtidor 1</option>
+            <option value="2">Surtidor 2</option>
+        </select>
+        <button id="btnPositivo">👍 Buena atención</button>
+        <button id="btnNegativo">👎 Mala atención</button>
+        <div id="mensajeCalificacion"></div>
+
+        <h4>Reputación actual:</h4>
+        <div id="estadoCalificaciones"></div>
+    </section>
 
     <hr>
 
-    <!-- Administrador -->
-    <h2>Administrador</h2>
+    <!-- Sección para el Administrador -->
+    <section class="seccion-admin">
+        <h2>Administrador</h2>
 
-    <!-- Gestión de gasolina -->
-    <div class="seccion-admin">
+        <!-- Gestión de gasolina -->
         <h3>Agregar gasolina</h3>
         <label for="surtidorId">ID de Surtidor:</label>
         <input type="number" id="surtidorId" />
@@ -28,10 +46,8 @@
         <input type="number" id="cantidadLitros" />
         <button id="agregarGasolina">Agregar</button>
         <div id="error"></div>
-    </div>
 
-    <!-- Gestión de horarios -->
-    <div class="seccion-admin">
+        <!-- Gestión de horarios -->
         <h3>Modificar horarios</h3>
         <label for="surtidorHorarioId">ID de Surtidor:</label>
         <input type="number" id="surtidorHorarioId" />
@@ -41,29 +57,25 @@
         <input type="text" id="nuevoCierre" placeholder="Ej: 19:00" />
         <button id="modificarHorario">Actualizar</button>
         <div id="errorHorario"></div>
-    </div>
 
-    <!-- Gestión de filas -->
-    <div class="seccion-admin">
+        <!-- Gestión de filas -->
         <h3>Estado de las filas</h3>
-        <div class="fila-control">
-            <label for="numeroPersonas">Personas en fila:</label>
-            <input type="number" id="numeroPersonas" min="0" placeholder="Ej: 5" />
-            <button id="informarFila">Actualizar estado</button>
-        </div>
+        <label for="numeroPersonas">Personas en fila:</label>
+        <input type="number" id="numeroPersonas" min="0" placeholder="Ej: 5" />
+        <button id="informarFila">Actualizar estado</button>
         <div id="mensajeFila"></div>
-        
+
         <h4>Análisis en tiempo real</h4>
         <div id="reporteSurtidores"></div>
         <div id="recomendacionFinal"></div>
-    </div>
 
-    <!-- Notificaciones -->
-    <div class="seccion-admin">
+        <!-- Notificación de camión -->
+        <h3>Notificaciones</h3>
         <button id="notificarCamion">Notificar llegada del camión</button>
         <div id="mensajeCamion"></div>
-    </div>
+    </section>
 
+    <!-- Enlace al script -->
     <script type="module" src="index.js"></script>
 </body>
 </html>

@@ -31,5 +31,27 @@ button {
     margin-top: 1em;
     font-style: italic;
 }
+.seccion-cliente {
+    margin: 20px 0;
+    padding: 15px;
+    border: 2px solid #eee;
+    border-radius: 8px;
+}
+
+#btnPositivo {
+    background-color: #4CAF50;
+    color: white;
+}
+
+#btnNegativo {
+    background-color: #f44336;
+    color: white;
+}
+
+progress {
+    width: 200px;
+    height: 20px;
+    margin: 5px 0;
+}
 
 
