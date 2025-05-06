@@ -20,6 +20,9 @@ const botonCamion = document.getElementById("notificarCamion");
 const horariosSurtidores = document.getElementById("horariosSurtidores");
 const botonModificarHorario = document.getElementById("modificarHorario");
 const errorHorario = document.getElementById("errorHorario");
+// Asegúrate de que estos selectores coincidan con tu HTML
+const botonTicket = document.getElementById("solicitarTicket");
+const numeroTicketSpan = document.getElementById("numeroTicket");
 
 // Elementos para gestión de filas
 const filaEstado = document.createElement("div");

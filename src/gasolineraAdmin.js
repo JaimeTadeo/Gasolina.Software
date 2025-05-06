@@ -1,3 +1,5 @@
+import { reportarSurtidorSinGasolina } from '../src/reportarSurtidor';
+
 export function agregarGasolina(surtidores, id, cantidad) {
     let surtidor;
 
