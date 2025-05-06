@@ -13,4 +13,10 @@ describe('Generación de Tickets', () => {
     generarTicket();
     expect(generarTicket()).toBe(2);
   });
+
+  it('debe generar un ticket con el número 3 al presionar el botón por tercera vez', () => {
+    generarTicket();
+    generarTicket();
+    expect(generarTicket()).toBe(3);
+  });
 });
