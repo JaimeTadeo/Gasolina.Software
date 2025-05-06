@@ -1,3 +1,5 @@
+import { reportarSurtidorSinGasolina } from '../src/reportarSurtidor';
+
 export function agregarGasolina(surtidores, id, cantidad) {
     let surtidor;
 
@@ -38,5 +40,17 @@ export function modificarHorario(surtidores, id, apertura, cierre) {
     };
 }
 
-
-
+// --------------------------------------------------
+function agregarListenersDeReporte() {
+    const botonesReportar = document.querySelectorAll('.btn-reportar');
+  
+    botonesReportar.forEach(boton => {
+      boton.addEventListener('click', () => {
+        const surtidorId = boton.id.split('-')[2];
+        reportarSurtidorSinGasolina(surtidorId);
+        alert(`Surtidor ${surtidorId} reportado sin gasolina.`);
+      });
+    });
+  }
+  
+  agregarListenersDeReporte();
