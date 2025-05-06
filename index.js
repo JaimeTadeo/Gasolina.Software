@@ -2,6 +2,7 @@ import gasolinera from "./src/gasolinera.js";
 import { agregarGasolina } from "./src/gasolineraAdmin.js";
 import { notificarCamionLlegado } from "./src/gasolineraAdmin.js";
 import { modificarHorario } from "./src/gasolineraAdmin.js";
+import { generarTicket } from "./src/ticket.js";
 
 const boton = document.getElementById("mostrarDisponibilidad");
 const resultado = document.getElementById("resultado");
@@ -14,7 +15,14 @@ const botonCamion = document.getElementById("notificarCamion");
 const horariosSurtidores = document.getElementById("horariosSurtidores");
 const botonModificarHorario = document.getElementById("modificarHorario");
 const errorHorario = document.getElementById("errorHorario");
+// Asegúrate de que estos selectores coincidan con tu HTML
+const botonTicket = document.getElementById("solicitarTicket");
+const numeroTicketSpan = document.getElementById("numeroTicket");
 
+botonTicket.addEventListener("click", () => {
+  const numero = generarTicket(); // Usa la función de ticket.js
+  numeroTicketSpan.textContent = numero;
+});
 // NUEVO: elementos para notificar estado de la fila y recomendaciones
 const filaEstado = document.createElement("div");
 filaEstado.innerHTML = `
