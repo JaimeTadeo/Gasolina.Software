@@ -1,6 +1,9 @@
 let contadorTickets = 0;
 
 export function generarTicket() {
-  contadorTickets += 1;
-  return contadorTickets;
+  return ++contadorTickets;
+}
+
+export function resetContador() {
+  contadorTickets = 0;
 }
