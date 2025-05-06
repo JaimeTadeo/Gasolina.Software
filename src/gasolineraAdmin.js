@@ -79,3 +79,21 @@ export function calificarSurtidor(surtidores, id, esPositiva) {
 export function obtenerCalificaciones(surtidores, id) {
     return surtidores[id]?.calificaciones || { positivas: 0, negativas: 0 };
 }
+
+export function obtenerSurtidorMasLleno(surtidores) {
+    let maxPersonas = -1;
+    let surtidorMasLleno = null;
+
+    Object.entries(surtidores).forEach(([id, datos]) => {
+        const personas = datos.filas.slice(-1)[0]?.personas || 0;
+        if (personas > maxPersonas) {
+            maxPersonas = personas;
+            surtidorMasLleno = id;
+        }
+    });
+
+    return {
+        id: surtidorMasLleno,
+        personas: maxPersonas
+    };
+}

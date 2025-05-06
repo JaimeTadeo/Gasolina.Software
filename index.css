@@ -55,3 +55,29 @@ progress {
 }
 
 
+.notificacion-usuario {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    background: white;
+    z-index: 1000;
+}
+
+#alertaSurtidores {
+    padding: 10px;
+    border-radius: 5px;
+    transition: background 0.3s;
+}
+
+#alertaSurtidores p {
+    margin: 0;
+    font-weight: bold;
+}
+
+#alertaSurtidores small {
+    color: #666;
+    font-size: 0.8em;
+}

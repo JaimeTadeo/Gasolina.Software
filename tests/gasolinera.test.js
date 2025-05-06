@@ -3,7 +3,9 @@ import {
     obtenerReporteFilas, 
     notificarAdministrador,
     calificarSurtidor,       // Añadir estas líneas
-    obtenerCalificaciones    // <-- Importación faltante
+    obtenerCalificaciones ,   // <-- Importación faltante
+    obtenerSurtidorMasLleno
+
 } from "../src/gasolineraAdmin.js";
 
 // ... (código existente)
@@ -32,5 +34,23 @@ describe("Sistema de calificaciones", () => {
     test("Obtener calificaciones de surtidor sin datos", () => {
         const result = obtenerCalificaciones(surtidores, 3);
         expect(result).toEqual({ positivas: 0, negativas: 0 }); // ✅
+    });
+    describe("Notificaciones de surtidores llenos", () => {
+        const surtidoresMock = {
+            1: { filas: [{ personas: 3 }, { personas: 5 }] },
+            2: { filas: [{ personas: 2 }] }
+        };
+    
+        test("Identificar surtidor más lleno", () => {
+            const resultado = obtenerSurtidorMasLleno(surtidoresMock);
+            expect(resultado.id).toBe("1");
+            expect(resultado.personas).toBe(5);
+        });
+    
+        test("Manejar surtidores sin filas", () => {
+            const surtidoresVacios = { 3: { filas: [] } };
+            const resultado = obtenerSurtidorMasLleno(surtidoresVacios);
+            expect(resultado.personas).toBe(0);
+        });
     });
 });

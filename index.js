@@ -242,3 +242,27 @@ function calcularPorcentaje(calificaciones) {
     return total > 0 ? (calificaciones.positivas / total) * 100 : 0;
  }
 }
+
+// Añadir al final del archivo
+function actualizarEstadoSurtidores() {
+    const estado = obtenerSurtidorMasLleno(surtidores);
+    const alertaDiv = document.getElementById("alertaSurtidores");
+    
+    let mensaje = "";
+    if (estado.personas === 0) {
+        mensaje = "✅ Todos los surtidores están disponibles";
+        alertaDiv.style.backgroundColor = "#e6ffe6";
+    } else {
+        mensaje = `⚠️ Evitar surtidor ${estado.id} (${estado.personas} personas en fila)`;
+        alertaDiv.style.backgroundColor = estado.personas > 5 ? "#ffe6e6" : "#fff7e6";
+    }
+    
+    alertaDiv.innerHTML = `
+        <p>${mensaje}</p>
+        <small>Última actualización: ${new Date().toLocaleTimeString()}</small>
+    `;
+}
+
+// Actualizar cada 30 segundos y al reportar filas
+setInterval(actualizarEstadoSurtidores, 30000);
+botonFila.addEventListener("click", actualizarEstadoSurtidores);
