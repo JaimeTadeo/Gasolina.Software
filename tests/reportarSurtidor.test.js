@@ -1,4 +1,4 @@
-import { reportarSurtidorSinGasolina, obtenerReportesDeSurtidores } from './reportarSurtidor';
+import { reportarSurtidorSinGasolina, obtenerReportesDeSurtidores } from '../src/reportarSurtidor';
 
 describe('Reportar Surtidor Sin Gasolina', () => {
   beforeEach(() => {
