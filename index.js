@@ -1,4 +1,5 @@
 import gasolinera from "./src/gasolinera.js";
+import { generarTicket } from "./src/ticket.js";
 import { calificarSurtidor, obtenerCalificaciones } from "./src/gasolineraAdmin.js";
 import { 
     agregarGasolina, 
@@ -8,7 +9,15 @@ import {
     obtenerReporteFilas,
     notificarAdministrador 
 } from "./src/gasolineraAdmin.js";
+import { reportarSurtidorSinGasolina } from './src/reportarSurtidor.js';
 
+document.querySelectorAll('.btn-reportar').forEach(boton => {
+  boton.addEventListener('click', () => {
+    const idSurtidor = boton.id.split('-')[2]; // Extrae "S1" o "S2"
+    reportarSurtidorSinGasolina(idSurtidor);
+    alert(`Surtidor ${idSurtidor} reportado sin gasolina`);
+  });
+});
 const boton = document.getElementById("mostrarDisponibilidad");
 const resultado = document.getElementById("resultado");
 const botonAdmin = document.getElementById("agregarGasolina");
@@ -20,7 +29,18 @@ const botonCamion = document.getElementById("notificarCamion");
 const horariosSurtidores = document.getElementById("horariosSurtidores");
 const botonModificarHorario = document.getElementById("modificarHorario");
 const errorHorario = document.getElementById("errorHorario");
+// Asegúrate de que estos selectores coincidan con tu HTML
+const botonTicket = document.getElementById("solicitarTicket");
+const numeroTicketSpan = document.getElementById("numeroTicket");
+const btnPositivo = document.getElementById("btnPositivo");
+const btnNegativo = document.getElementById("btnNegativo");
+const selectCalificacion = document.getElementById("surtidorCalificacion");
 
+botonTicket.addEventListener("click", () => {
+    const numero = generarTicket(); // Usa la función de ticket.js
+    numeroTicketSpan.textContent = numero;
+  });
+  
 // Elementos para gestión de filas
 const filaEstado = document.createElement("div");
 filaEstado.innerHTML = `
@@ -49,12 +69,14 @@ const surtidores = {
     1: { 
         litros: 1000, 
         horario: { apertura: "08:00", cierre: "20:00" }, 
-        filas: [] 
+        filas: [],
+        calificaciones: { positivas: 0, negativas: 0 } // <-- Añade esto
     },
     2: { 
         litros: 800, 
         horario: { apertura: "09:00", cierre: "18:00" }, 
-        filas: [] 
+        filas: [],
+        calificaciones: { positivas: 0, negativas: 0 } // <-- Añade esto
     }
 };
 
@@ -198,6 +220,7 @@ function formatoHoraAmigable(fecha) {
         minute: "2-digit",
         hour12: true
     });
+    
 
 // Nuevos elementos
 const btnPositivo = document.getElementById("btnPositivo");
