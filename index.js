@@ -29,6 +29,9 @@ const botonCamion = document.getElementById("notificarCamion");
 const horariosSurtidores = document.getElementById("horariosSurtidores");
 const botonModificarHorario = document.getElementById("modificarHorario");
 const errorHorario = document.getElementById("errorHorario");
+const btnPositivo = document.getElementById("btnPositivo");
+const btnNegativo = document.getElementById("btnNegativo");
+const selectCalificacion = document.getElementById("surtidorCalificacion");
 
 // Elementos para gestión de filas
 const filaEstado = document.createElement("div");
