@@ -29,18 +29,7 @@ const botonCamion = document.getElementById("notificarCamion");
 const horariosSurtidores = document.getElementById("horariosSurtidores");
 const botonModificarHorario = document.getElementById("modificarHorario");
 const errorHorario = document.getElementById("errorHorario");
-// Asegúrate de que estos selectores coincidan con tu HTML
-const botonTicket = document.getElementById("solicitarTicket");
-const numeroTicketSpan = document.getElementById("numeroTicket");
-const btnPositivo = document.getElementById("btnPositivo");
-const btnNegativo = document.getElementById("btnNegativo");
-const selectCalificacion = document.getElementById("surtidorCalificacion");
 
-botonTicket.addEventListener("click", () => {
-    const numero = generarTicket(); // Usa la función de ticket.js
-    numeroTicketSpan.textContent = numero;
-  });
-  
 // Elementos para gestión de filas
 const filaEstado = document.createElement("div");
 filaEstado.innerHTML = `
