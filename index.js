@@ -62,13 +62,13 @@ const surtidores = {
         litros: 1000, 
         horario: { apertura: "08:00", cierre: "20:00" }, 
         filas: [],
-        calificaciones: { positivas: 0, negativas: 0 } // <-- Añade esto
+        calificaciones: { positivas: 0, negativas: 0 } 
     },
     2: { 
         litros: 800, 
         horario: { apertura: "09:00", cierre: "18:00" }, 
         filas: [],
-        calificaciones: { positivas: 0, negativas: 0 } // <-- Añade esto
+        calificaciones: { positivas: 0, negativas: 0 }
     }
 };
 
