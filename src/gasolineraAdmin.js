@@ -1,8 +1,7 @@
-import { reportarSurtidorSinGasolina } from '../src/reportarSurtidor';
+import { reportarSurtidorSinGasolina } from '../src/reportarSurtidor.js';
 
 export function agregarGasolina(surtidores, id, cantidad) {
     let surtidor;
-
     if (Array.isArray(surtidores)) {
         surtidor = surtidores.find(s => s.id === id);
     } else {
@@ -17,6 +16,11 @@ export function agregarGasolina(surtidores, id, cantidad) {
         throw new Error("Cantidad inválida");
     }
 
+    if (typeof surtidor.litros !== 'number') {
+        console.warn(`Advertencia: surtidor ${id} tiene litros no numéricos (${surtidor.litros}). Inicializando a 0.`);
+        surtidor.litros = 0;
+    }
+
     surtidor.litros += cantidad;
 }
 
@@ -28,33 +32,40 @@ export function notificarCamionLlegado(callback) {
 }
 
 export function modificarHorario(surtidores, id, apertura, cierre) {
-    if (!surtidores[id]) {
-        throw new Error("Surtidor no encontrado");
+
+    const surtidorIdString = String(id);
+
+    if (!surtidores[surtidorIdString]) {
+        throw new Error(`Surtidor con ID ${id} no encontrado`);
     }
     if (apertura >= cierre) {
         throw new Error("El horario de apertura debe ser antes del de cierre");
     }
-    surtidores[id].horario = {
+    surtidores[surtidorIdString].horario = {
         apertura,
         cierre
     };
 }
 
-let estadoFilas = {};
 
 export function reportarFila(surtidores, idSurtidor, personas) {
+    const surtidorIdString = String(idSurtidor);
+
     if (isNaN(personas) || personas < 0) {
         throw new Error("Número de personas inválido");
     }
-    
-    if (!surtidores[idSurtidor]) {
-        throw new Error("Surtidor no existe");
+
+    if (!surtidores[surtidorIdString]) {
+        throw new Error(`Surtidor con ID ${idSurtidor} no existe`);
     }
 
-    // Añadir el reporte al historial del surtidor
-    surtidores[idSurtidor].filas.push({
+    if (!surtidores[surtidorIdString].filas) {
+         surtidores[surtidorIdString].filas = [];
+     }
+
+    surtidores[surtidorIdString].filas.push({
         personas: personas,
-        hora: new Date()
+        hora: new Date() 
     });
 }
 
@@ -63,39 +74,40 @@ export function obtenerReporteFilas(surtidores) {
 }
 
 export function notificarAdministrador(mensaje) {
-    console.log(`[ADMIN] ${mensaje}`);
+    console.log(`[ADMIN LOG] ${mensaje}`);
 }
 
 export function calificarSurtidor(surtidores, id, esPositiva) {
-    if (!surtidores[id]) throw new Error("Surtidor no existe");
-    
-    // Inicializar si no existe
-    if (!surtidores[id].calificaciones) {
-        surtidores[id].calificaciones = { positivas: 0, negativas: 0 };
+    const surtidorIdString = String(id);
+
+    if (!surtidores[surtidorIdString]) throw new Error(`Surtidor con ID ${id} no existe`);
+
+    if (!surtidores[surtidorIdString].calificaciones) {
+        surtidores[surtidorIdString].calificaciones = { positivas: 0, negativas: 0 };
     }
-    
-    esPositiva ? surtidores[id].calificaciones.positivas++ 
-               : surtidores[id].calificaciones.negativas++;
+
+    esPositiva ? surtidores[surtidorIdString].calificaciones.positivas++
+               : surtidores[surtidorIdString].calificaciones.negativas++;
 }
 
 export function obtenerCalificaciones(surtidores, id) {
-    return surtidores[id]?.calificaciones || { positivas: 0, negativas: 0 };
+     const surtidorIdString = String(id);
+    return surtidores[surtidorIdString]?.calificaciones || { positivas: 0, negativas: 0 };
 }
 
 export function obtenerSurtidorMasLleno(surtidores) {
-    let maxPersonas = -1;
-    let surtidorMasLleno = null;
-
+    let maxPersonas = -1; 
+    let surtidorMasLlenoId = null;
     Object.entries(surtidores).forEach(([id, datos]) => {
-        const personas = datos.filas.slice(-1)[0]?.personas || 0;
+        const personas = datos.filas && datos.filas.length > 0 ? datos.filas.slice(-1)[0].personas : 0;
         if (personas > maxPersonas) {
-            maxPersonas = personas;
-            surtidorMasLleno = id;
+            maxPersonas = personas; 
+            surtidorMasLlenoId = id; 
         }
     });
 
     return {
-        id: surtidorMasLleno,
+        id: surtidorMasLlenoId,
         personas: maxPersonas
     };
 }
