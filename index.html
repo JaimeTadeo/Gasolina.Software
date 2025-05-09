@@ -8,141 +8,125 @@
 <body>
     <h1>Gasolinera</h1>
 
-    <!-- Sección para el Usuario -->
-    <section class="seccion-cliente">
-        <h2>Usuario</h2>
+    <div class="container">
 
-        <!-- Ver disponibilidad -->
-        <button id="mostrarDisponibilidad">Ver disponibilidad de gasolina</button>
-        <div id="resultado"></div>
-        <div id="horariosSurtidores"></div>
+        <section class="seccion-admin">
+            <h2>Administrador</h2>
 
-        <!-- Calificar atención -->
-        <h3>Calificar atención</h3>
-        <label for="surtidorCalificacion">Selecciona surtidor:</label>
-        <select id="surtidorCalificacion">
-            <option value="1">Surtidor 1</option>
-            <option value="2">Surtidor 2</option>
-        </select>
-        <button id="btnPositivo">👍 Buena atención</button>
-        <button id="btnNegativo">👎 Mala atención</button>
-        <div id="mensajeCalificacion"></div>
+            <hr>
 
-        <h4>Reputación actual:</h4>
-        <div id="estadoCalificaciones"></div>
-    
-         <h6>🚦 Estado actual de los surtidores</h6>
-         <div id="alertaSurtidores">
-            <!-- Aquí se mostrará la notificación -->
-            <p>Cargando información...</p>
-        </div>
-      </div>
-    </section>
+            <h3>Gestión de Gasolina</h3>
+            <label for="surtidorId">ID de Surtidor:</label>
+            <input type="number" id="surtidorId" />
+            <label for="cantidadLitros">Litros a agregar:</label>
+            <input type="number" id="cantidadLitros" />
+            <button id="agregarGasolina">Agregar Gasolina</button>
+            <div id="error"></div>
 
-    <hr>
+            <hr>
 
-    <!-- Sección para el Administrador -->
-    <section class="seccion-admin">
-        <h2>Administrador</h2>
+            <h3>Gestión de Horarios</h3>
+            <label for="surtidorHorarioId">ID de Surtidor:</label>
+            <input type="number" id="surtidorHorarioId" />
+            <label for="nuevaApertura">Apertura (HH:MM):</label>
+            <input type="text" id="nuevaApertura" placeholder="Ej: 07:00" />
+            <label for="nuevoCierre">Cierre (HH:MM):</label>
+            <input type="text" id="nuevoCierre" placeholder="Ej: 19:00" />
+            <button id="modificarHorario">Actualizar Horario</button>
+            <div id="errorHorario"></div>
 
-        <!-- Gestión de gasolina -->
-        <h3>Agregar gasolina</h3>
-        <label for="surtidorId">ID de Surtidor:</label>
-        <input type="number" id="surtidorId" />
-        <label for="cantidadLitros">Litros a agregar:</label>
-        <input type="number" id="cantidadLitros" />
-        <button id="agregarGasolina">Agregar</button>
-        <div id="error"></div>
+            <hr>
 
-        <!-- Gestión de horarios -->
-        <h3>Modificar horarios</h3>
-        <label for="surtidorHorarioId">ID de Surtidor:</label>
-        <input type="number" id="surtidorHorarioId" />
-        <label for="nuevaApertura">Apertura (HH:MM):</label>
-        <input type="text" id="nuevaApertura" placeholder="Ej: 07:00" />
-        <label for="nuevoCierre">Cierre (HH:MM):</label>
-        <input type="text" id="nuevoCierre" placeholder="Ej: 19:00" />
-        <button id="modificarHorario">Actualizar</button>
-        <div id="errorHorario"></div>
+            <h3>Informar Estado de la Fila</h3>
+             <label for="surtidorSeleccionado">Selecciona surtidor:</label>
+             <select id="surtidorSeleccionado">
+                <option value="1">Surtidor 1</option>
+                <option value="2">Surtidor 2</option>
+            </select>
+            <label for="numeroPersonas">¿Cuántas personas hay en la fila?</label>
+            <input type="number" id="numeroPersonas" min="0" />
+            <button id="informarFila">Informar Estado</button>
+            <div id="mensajeFila"></div>
 
+            <hr>
 
-        <!-- Gestión de filas -->
-        <h3>Estado de las filas</h3>
-        <label for="numeroPersonas">Personas en fila:</label>
-        <input type="number" id="numeroPersonas" min="0" placeholder="Ej: 5" />
-        <button id="informarFila">Actualizar estado</button>
+            <h3>Reportar Surtidores Sin Gasolina</h3>
+            <button id="reportar-surtidor-1" class="btn-reportar">Reportar Surtidor 1 Sin Gasolina</button>
+            <button id="reportar-surtidor-2" class="btn-reportar">Reportar Surtidor 2 Sin Gasolina</button>
 
-    <button id="agregarGasolina">Agregar gasolina</button>
-    <div id="error"></div>
+            <hr>
 
-    <!-- Notificar llegada del camión -->
-    <button id="notificarCamion">Notificar llegada del camión</button>
+            <h3>Notificar Llegada del Camión</h3>
+            <button id="notificarCamion">Notificar Camión</button>
 
-    <!-- Modificar horario -->
-    <h3>Modificar horarios de surtidor</h3>
+        </section>
 
-    <label for="surtidorHorarioId">ID de Surtidor:</label>
-    <input type="number" id="surtidorHorarioId" />
+        <section class="seccion-cliente">
+            <h2>Usuario</h2>
 
-    <label for="nuevaApertura">Nuevo horario de apertura (HH:MM):</label>
-    <input type="text" id="nuevaApertura" placeholder="Ej: 07:00" />
+            <hr>
 
-    <label for="nuevoCierre">Nuevo horario de cierre (HH:MM):</label>
-    <input type="text" id="nuevoCierre" placeholder="Ej: 19:00" />
+             <h3>Notificaciones del Sistema</h3>
+             <div id="systemNotifications">
+                 <p>No hay notificaciones recientes.</p>
+             </div>
 
-    <button id="modificarHorario">Modificar horario</button>
+            <hr>
 
-    <!---------------------------->
-    <button id="reportar-surtidor-S1" class="btn-reportar">Reportar Surtidor S1 Sin Gasolina</button>
-    <button id="reportar-surtidor-S2" class="btn-reportar">Reportar Surtidor S2 Sin Gasolina</button>
-    <!---------------------------->
+             <h3>Reportes de Filas (Tiempo Real)</h3>
+             <div id="adminFilaReportes">
+                 <p>Cargando reportes...</p>
+             </div>
 
-    <div id="errorHorario"></div>
+            <hr>
 
-    <hr>
+            <h3>Ver Disponibilidad y Precios</h3>
+            <button id="mostrarDisponibilidad">Ver disponibilidad de gasolina</button>
+            <div id="resultado"></div>
+            <div id="horariosSurtidoresCliente"></div>
 
-    <!-- NUEVO: Clientes informan la fila -->
-    <div id="filaEstado">
-        <h3>Clientes</h3>
-        <label for="numeroPersonas">¿Cuántas personas hay en la fila?</label>
-        <input type="number" id="numeroPersonas" min="0" />
-        <button id="informarFila">Informar estado de la fila</button>
+            <hr>
 
-        <div id="mensajeFila"></div>
+            <h3>Calificar Atención</h3>
+            <label for="surtidorCalificacion">Selecciona surtidor:</label>
+            <select id="surtidorCalificacion">
+                <option value="1">Surtidor 1</option>
+                <option value="2">Surtidor 2</option>
+            </select>
+            <button id="btnPositivo">👍 Buena atención</button>
+            <button id="btnNegativo">👎 Mala atención</button>
+            <div id="mensajeCalificacion"></div>
 
-        <h4>Análisis en tiempo real</h4>
-        <div id="reporteSurtidores"></div>
+            <h4>Reputación actual:</h4>
+            <div id="estadoCalificaciones"></div>
 
-    <div id="notificacionesFavoritos">
-        <h3>Mis Surtidores Favoritos</h3>
-        
-        <label for="surtidorFavoritoId">ID de Surtidor favorito:</label>
-        <input type="number" id="surtidorFavoritoId" min="1" />
-        
-        <button id="marcarFavorito">Marcar como favorito</button>
-        <button id="verificarFavoritos">Verificar disponibilidad en favoritos</button>
-        
-        <div id="notificaciones"></div>
+            <hr>
 
-    <!-- Notificaciones -->
-    <div class="seccion-admin">
-        <!-- Notificación de camión -->
-        <h3>Notificaciones</h3>
-        <button id="notificarCamion">Notificar llegada del camión</button>
-        <div id="mensajeCamion"></div>
-   </div>
-    </section>
+             <h6>🚦 Estado general de los surtidores</h6>
+             <div id="alertaSurtidores">
+                <p>Cargando información...</p>
+            </div>
 
+            <hr>
 
-    <!-- Enlace al script -->
+            <h3>Mis Surtidores Favoritos</h3>
+            <label for="surtidorFavoritoId">ID de Surtidor favorito:</label>
+            <input type="number" id="surtidorFavoritoId" min="1" />
+            <button id="marcarFavorito">Marcar como favorito</button>
+            <button id="verificarFavoritos">Verificar disponibilidad en favoritos</button>
+            <div id="notificaciones"></div>
 
-    <div id="sistemaTickets">
-        <h3>Sistema de Tickets</h3>
-        <button id="solicitarTicket">Solicitar Ticket</button>
-        <div id="ticketInfo">
-            <p>Su número de ticket: <span id="numeroTicket">-</span></p>
-            <p id="mensajeTicket"></p>
-        </div>
+            <hr>
+
+            <h3>Sistema de Tickets</h3>
+            <button id="solicitarTicket">Solicitar Ticket</button>
+            <div id="ticketInfo">
+                <p>Su número de ticket: <span id="numeroTicket">-</span></p>
+                <p id="mensajeTicket"></p>
+            </div>
+
+        </section>
+
     </div>
 
     <script type="module" src="index.js"></script>

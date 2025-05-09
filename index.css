@@ -2,40 +2,123 @@ body {
     font-family: Arial, sans-serif;
     text-align: center;
     padding: 30px;
+    margin: 0;
+    background-color: #f8f8f8;
+    color: #333;
+}
+
+h1 {
+    margin-bottom: 20px;
+    color: #0056b3;
+}
+
+h2, h3, h4, h6 {
+    color: #0056b3;
+}
+
+.container {
+    display: flex;
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.seccion-admin,
+.seccion-cliente {
+    flex: 1;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    text-align: left;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.seccion-admin h2,
+.seccion-cliente h2,
+.seccion-admin h3,
+.seccion-cliente h3,
+.seccion-admin h4,
+.seccion-cliente h4,
+.seccion-cliente h6 {
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 15px;
 }
 
 button {
     padding: 10px 20px;
     font-size: 16px;
     cursor: pointer;
+    margin-top: 10px;
+    margin-right: 8px;
+    border: none;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    opacity: 0.9;
+}
+
+button:last-child {
+     margin-right: 0;
+}
+
+input[type="number"],
+input[type="text"],
+select {
+    padding: 8px;
+    margin: 5px 0;
+    display: inline-block;
+    margin-right: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+label {
+    display: inline-block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+hr {
+    margin: 25px 0;
+    border: 0;
+    border-top: 1px solid #eee;
 }
 
 #resultado p {
     margin-top: 15px;
     font-size: 18px;
     color: #333;
+    text-align: center;
 }
 
-#mensajeCamion {
-    margin-top: 1em;
-    font-weight: bold;
-    color: green;
+#error,
+#errorHorario,
+#mensajeFila,
+#mensajeCalificacion {
+    margin-top: 0.8em;
+    padding: 5px;
+    border-radius: 4px;
+    text-align: center;
+    min-height: 1em;
 }
 
-#errorHorario {
-    color: red;
-    margin-top: 0.5em;
-}
+#error { color: red; border: 1px solid red; background-color: #ffe6e6;}
+#errorHorario { color: red; border: 1px solid red; background-color: #ffe6e6;}
+#mensajeCalificacion { color: red; border: 1px solid red; background-color: #ffe6e6;}
 
-#horariosSurtidores {
+#mensajeFila { color: green; border: 1px solid green; background-color: #e6ffe6;}
+
+
+#horariosSurtidoresCliente {
     margin-top: 1em;
     font-style: italic;
-}
-.seccion-cliente {
-    margin: 20px 0;
-    padding: 15px;
-    border: 2px solid #eee;
-    border-radius: 8px;
+    text-align: center;
 }
 
 #btnPositivo {
@@ -51,9 +134,20 @@ button {
 progress {
     width: 200px;
     height: 20px;
-    margin: 5px 0;
+    margin: 10px auto;
+    display: block;
 }
 
+#estadoCalificaciones {
+    text-align: center;
+    margin-top: 1em;
+    padding-top: 1em;
+    border-top: 1px solid #eee;
+}
+
+#estadoCalificaciones p {
+    margin: 5px 0;
+}
 
 .notificacion-usuario {
     position: fixed;
@@ -70,6 +164,8 @@ progress {
     padding: 10px;
     border-radius: 5px;
     transition: background 0.3s;
+    text-align: center;
+    margin-top: 1em;
 }
 
 #alertaSurtidores p {
@@ -80,4 +176,109 @@ progress {
 #alertaSurtidores small {
     color: #666;
     font-size: 0.8em;
+}
+
+#adminFilaReportes {
+    margin-top: 1em;
+    padding: 10px;
+    border: 1px dashed #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+#adminFilaReportes .surtidor-info {
+    margin-bottom: 8px;
+    padding-bottom: 8px;
+    border-bottom: 1px dotted #ddd;
+}
+
+#adminFilaReportes .surtidor-info:last-child {
+     border-bottom: none;
+     padding-bottom: 0;
+     margin-bottom: 0;
+}
+
+#adminFilaReportes .destacado {
+    margin-top: 10px;
+    font-weight: bold;
+    color: #0056b3;
+    text-align: center;
+}
+
+#systemNotifications {
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #d3e0ea;
+    background-color: #e9f2f7;
+    border-radius: 5px;
+    text-align: left;
+}
+
+#systemNotifications h3 {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+#systemNotifications p {
+    margin: 5px 0;
+    padding: 5px;
+    border-bottom: 1px dotted #c0d9e6;
+}
+
+#systemNotifications p:last-child {
+    border-bottom: none;
+}
+
+#systemNotifications .warning {
+    color: #cc6600;
+    font-weight: bold;
+}
+
+#systemNotifications .success {
+    color: #0a6e0a;
+    font-weight: bold;
+}
+
+#notificacionesFavoritos {
+     margin-top: 20px;
+     padding-top: 10px;
+     border-top: 1px solid #eee;
+}
+
+#notificaciones {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border: 1px solid #eee;
+    border-radius: 5px;
+    min-height: 1em;
+}
+#notificaciones p {
+    margin: 5px 0;
+}
+
+#sistemaTickets {
+    margin-top: 20px;
+    padding-top: 10px;
+    border-top: 1px solid #eee;
+}
+
+#ticketInfo {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #e9f7ef;
+    border: 1px solid #d0e9c6;
+    border-radius: 5px;
+    text-align: center;
+    min-height: 2em;
+}
+
+#ticketInfo p {
+    margin: 5px 0;
+}
+
+#ticketInfo #numeroTicket {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #0a6e0a;
 }
