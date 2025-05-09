@@ -1,11 +1,12 @@
-global.reportesSurtidores = global.reportesSurtidores || [];
+let reportesSurtidores = [];
 
 export function reportarSurtidorSinGasolina(idSurtidor) {
-  if (!global.reportesSurtidores.includes(idSurtidor)) {
-    global.reportesSurtidores.push(idSurtidor);
+  if (!reportesSurtidores.includes(idSurtidor)) {
+    reportesSurtidores.push(idSurtidor);
+    console.log(`[Reportes Sin Gas] Surtidor ${idSurtidor} añadido a la lista de reportes.`);
   }
 }
 
 export function obtenerReportesDeSurtidores() {
-  return global.reportesSurtidores;
+  return reportesSurtidores;
 }
