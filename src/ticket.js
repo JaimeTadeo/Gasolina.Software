@@ -1,4 +1,5 @@
 let contadorTickets = 0;
+let ticketsUsados = new Set();
 
 export function generarTicket() {
   return ++contadorTickets;
@@ -9,8 +10,6 @@ export function resetContador() {
   ticketsUsados.clear();
 }
 
-let ticketsUsados = new Set();
-
 export function usarTicket(numero) {
   if (numero <= 0 || numero > contadorTickets || ticketsUsados.has(numero)) {
     return false;
@@ -18,3 +17,4 @@ export function usarTicket(numero) {
   ticketsUsados.add(numero);
   return true;
 }
+
