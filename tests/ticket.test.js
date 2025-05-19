@@ -1,22 +1,22 @@
-import { generarTicket, resetContador } from '../src/ticket.js';
+import { generarTicket, resetContador, usarTicket } from '../src/ticket.js';
 
-describe('Generación de Tickets', () => {
+describe('Uso de Tickets', () => {
   beforeEach(() => {
     resetContador();
   });
 
-  it('debe generar un ticket con el número 1 al presionar el botón por primera vez', () => {
-    expect(generarTicket()).toBe(1);
+  it('debe permitir usar un ticket generado', () => {
+    const ticket = generarTicket();
+    expect(usarTicket(ticket)).toBe(true);
   });
 
-  it('debe generar un ticket con el número 2 al presionar el botón por segunda vez', () => {
-    generarTicket();
-    expect(generarTicket()).toBe(2);
+  it('no debe permitir usar un ticket que no fue generado', () => {
+    expect(usarTicket(99)).toBe(false);
   });
 
-  it('debe generar un ticket con el número 3 al presionar el botón por tercera vez', () => {
-    generarTicket();
-    generarTicket();
-    expect(generarTicket()).toBe(3);
+  it('no debe permitir usar un ticket dos veces', () => {
+    const ticket = generarTicket();
+    expect(usarTicket(ticket)).toBe(true);
+    expect(usarTicket(ticket)).toBe(false);
   });
 });
