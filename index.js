@@ -1,5 +1,5 @@
 import gasolinera from "./src/gasolinera.js";
-import { generarTicket } from "./src/ticket.js";
+import { generarTicket, usarTicket } from "./src/ticket.js";
 import { calificarSurtidor, obtenerCalificaciones, obtenerSurtidorMasLleno } from "./src/gasolineraAdmin.js";
 import {
     agregarGasolina,
@@ -36,11 +36,7 @@ const alertaSurtidoresDiv = document.getElementById("alertaSurtidores");
 const inputSurtidorFavoritoId = document.getElementById("surtidorFavoritoId");
 const botonMarcarFavorito = document.getElementById("marcarFavorito");
 const botonVerificarFavoritos = document.getElementById("verificarFavoritos");
-const notificacionesFavoritosDiv = document.getElementById("notificaciones");
-const botonSolicitarTicket = document.getElementById("solicitarTicket");
-const numeroTicketSpan = document.getElementById("numeroTicket");
-const mensajeTicketDiv = document.getElementById("mensajeTicket");
-
+const notificacionesFavoritosDiv = document.getElementById("notificaciones")
 
 let isAvailabilityShown = false;
 
@@ -346,12 +342,61 @@ document.querySelectorAll('.btn-reportar').forEach(boton => {
   });
 });
 
-botonSolicitarTicket.addEventListener("click", () => {
-    const numeroTicket = generarTicket();
-    numeroTicketSpan.textContent = numeroTicket;
-    mensajeTicketDiv.textContent = "Espere su turno.";
-     mensajeTicketDiv.style.color = "blue";
+
+/*----------------------------------------------------------------------------------------------------------*/
+/* ---------- Sistema de Tickets ---------- */
+let miTicket = null;
+const usarTicketBtn = document.createElement('button');
+
+// Configurar botón "Usar mi ticket"
+usarTicketBtn.textContent = 'Usar mi ticket';
+usarTicketBtn.id = 'usarTicketBtn';
+usarTicketBtn.style.cssText = `
+    margin-top: 10px;
+    padding: 8px 16px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    display: block;
+`;
+
+// Función para usar el ticket
+usarTicketBtn.addEventListener('click', () => {
+  const mensajeTicket = document.getElementById('mensajeTicket');
+  
+  if (miTicket === null) {
+    mensajeTicket.textContent = '❌ Primero debes generar un ticket.';
+    mensajeTicket.style.color = 'red';
+    return;
+  }
+  
+  const resultado = usarTicket(miTicket);
+  if (resultado) {
+    mensajeTicket.textContent = `✅ Ticket ${miTicket} usado correctamente.`;
+    mensajeTicket.style.color = 'green';
+    usarTicketBtn.disabled = true;
+    document.getElementById('numeroTicket').textContent = '-';
+    miTicket = null; // Limpiar el ticket después de usarlo
+  } else {
+    mensajeTicket.textContent = `❌ El ticket ${miTicket} ya fue usado o no es válido.`;
+    mensajeTicket.style.color = 'red';
+  }
 });
+
+// Insertar botón en el DOM
+document.getElementById('ticketInfo').appendChild(usarTicketBtn);
+
+// Evento para solicitar ticket
+document.getElementById('solicitarTicket').addEventListener('click', () => {
+  miTicket = generarTicket();
+  document.getElementById('numeroTicket').textContent = miTicket;
+  document.getElementById('mensajeTicket').textContent = 'Ticket generado. Puedes usarlo cuando te toque.';
+  document.getElementById('mensajeTicket').style.color = 'black';
+  usarTicketBtn.disabled = false;
+});
+/*----------------------------------------------------------------------------------------------------------*/
 
 
 actualizarAlertaSurtidoresUsuario();
