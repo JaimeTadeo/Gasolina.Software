@@ -39,8 +39,8 @@
             <hr>
 
             <h3>Informar Estado de la Fila</h3>
-             <label for="surtidorSeleccionado">Selecciona surtidor:</label>
-             <select id="surtidorSeleccionado">
+            <label for="surtidorSeleccionado">Selecciona surtidor:</label>
+            <select id="surtidorSeleccionado">
                 <option value="1">Surtidor 1</option>
                 <option value="2">Surtidor 2</option>
             </select>
@@ -67,17 +67,17 @@
 
             <hr>
 
-             <h3>Notificaciones del Sistema</h3>
-             <div id="systemNotifications">
-                 <p>No hay notificaciones recientes.</p>
-             </div>
+            <h3>Notificaciones del Sistema</h3>
+            <div id="systemNotifications">
+                <p>No hay notificaciones recientes.</p>
+            </div>
 
             <hr>
 
-             <h3>Reportes de Filas (Tiempo Real)</h3>
-             <div id="adminFilaReportes">
-                 <p>Cargando reportes...</p>
-             </div>
+            <h3>Reportes de Filas (Tiempo Real)</h3>
+            <div id="adminFilaReportes">
+                <p>Cargando reportes...</p>
+            </div>
 
             <hr>
 
@@ -103,8 +103,8 @@
 
             <hr>
 
-             <h6>🚦 Estado general de los surtidores</h6>
-             <div id="alertaSurtidores">
+            <h6>🚦 Estado general de los surtidores</h6>
+            <div id="alertaSurtidores">
                 <p>Cargando información...</p>
             </div>
 
@@ -124,6 +124,13 @@
             <div id="ticketInfo">
                 <p>Su número de ticket: <span id="numeroTicket">-</span></p>
                 <p id="mensajeTicket"></p>
+
+                <label for="estadoTicket">Estado del ticket:</label>
+                <select id="estadoTicket">
+                    <option value="pendiente">Pendiente</option>
+                    <option value="en_proceso">En proceso</option>
+                    <option value="atendiendo">Atendiendo</option>
+                </select>
             </div>
 
         </section>
