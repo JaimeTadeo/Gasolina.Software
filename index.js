@@ -401,6 +401,83 @@
     document.getElementById('mensajeTicket').style.color = 'black';
     usarTicketBtn.disabled = false;
     });
+let tickets = []; // lista de tickets
+
+// Usuario: Solicita ticket
+document.getElementById('solicitarTicket').addEventListener('click', () => {
+    const nuevoTicket = {
+        id: tickets.length + 1,
+        estado: 'pendiente'
+    };
+    tickets.push(nuevoTicket);
+    actualizarTicketUsuario(nuevoTicket);
+    actualizarListaTicketsAdmin();
+});
+
+// Usuario: actualiza su vista de ticket
+function actualizarTicketUsuario(ticket) {
+    document.getElementById('numeroTicket').innerText = ticket.id;
+    document.getElementById('mensajeTicket').innerText = `Estado actual: ${ticket.estado}`;
+    document.getElementById('estadoTicket').value = ticket.estado;
+}
+
+// Usuario: puede ver cambios en tiempo real si cambia estado (opcional)
+document.getElementById('estadoTicket').addEventListener('change', (e) => {
+    const ticketId = parseInt(document.getElementById('numeroTicket').innerText);
+    const nuevoEstado = e.target.value;
+    const ticket = tickets.find(t => t.id === ticketId);
+    if (ticket) {
+        ticket.estado = nuevoEstado;
+        actualizarTicketUsuario(ticket);
+        actualizarListaTicketsAdmin();
+    }
+});
+
+// Admin: muestra todos los tickets y permite cambiar su estado
+function actualizarListaTicketsAdmin() {
+    const contenedor = document.getElementById('listaTickets');
+    contenedor.innerHTML = '';
+
+    if (tickets.length === 0) {
+        contenedor.innerHTML = '<p>No hay tickets todavía.</p>';
+        return;
+    }
+
+    tickets.forEach(ticket => {
+        const ticketDiv = document.createElement('div');
+        ticketDiv.innerHTML = `
+            <p>🎟️ Ticket #${ticket.id} - Estado: 
+                <select data-id="${ticket.id}">
+                    <option value="pendiente" ${ticket.estado === 'pendiente' ? 'selected' : ''}>Pendiente</option>
+                    <option value="en_proceso" ${ticket.estado === 'en_proceso' ? 'selected' : ''}>En proceso</option>
+                    <option value="atendiendo" ${ticket.estado === 'atendiendo' ? 'selected' : ''}>Atendiendo</option>
+                </select>
+            </p>
+        `;
+        contenedor.appendChild(ticketDiv);
+    });
+
+    // Escuchar cambios de estado en el lado del admin
+    document.querySelectorAll('#listaTickets select').forEach(select => {
+        select.addEventListener('change', (e) => {
+            const ticketId = parseInt(e.target.getAttribute('data-id'));
+            const nuevoEstado = e.target.value;
+            const ticket = tickets.find(t => t.id === ticketId);
+            if (ticket) {
+                ticket.estado = nuevoEstado;
+
+                // Si el usuario tiene este ticket visible, actualizar su vista también
+                const ticketUsuarioId = parseInt(document.getElementById('numeroTicket').innerText);
+                if (ticketUsuarioId === ticket.id) {
+                    actualizarTicketUsuario(ticket);
+                }
+
+                actualizarListaTicketsAdmin();
+            }
+        });
+    });
+}
+
     /*----------------------------------------------------------------------------------------------------------*/
 
 

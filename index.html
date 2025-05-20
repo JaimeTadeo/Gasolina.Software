@@ -17,8 +17,11 @@
             <hr>
 
             <h3>Gestión de Gasolina</h3>
-            <label for="surtidorId">ID de Surtidor:</label>
-            <input type="number" id="surtidorId" />
+            <label for="surtidorSeleccionado">Selecciona surtidor:</label>
+            <select id="surtidorSeleccionado">
+                <option value="1">Surtidor 1</option>
+                <option value="2">Surtidor 2</option>
+            </select>
             <label for="cantidadLitros">Litros a agregar:</label>
             <input type="number" id="cantidadLitros" />
             <button id="agregarGasolina">Agregar Gasolina</button>
@@ -27,7 +30,11 @@
             <hr>
 
             <h3>Gestión de Horarios</h3>
-            <label for="surtidorHorarioId">ID de Surtidor:</label>
+            <label for="surtidorSeleccionado">Selecciona surtidor:</label>
+            <select id="surtidorSeleccionado">
+                <option value="1">Surtidor 1</option>
+                <option value="2">Surtidor 2</option>
+            </select>
             <input type="number" id="surtidorHorarioId" />
             <label for="nuevaApertura">Apertura (HH:MM):</label>
             <input type="text" id="nuevaApertura" placeholder="Ej: 07:00" />
@@ -59,6 +66,19 @@
 
             <h3>Notificar Llegada del Camión</h3>
             <button id="notificarCamion">Notificar Camión</button>
+            <hr>
+
+            <h4>Gestión de Tickets</h4>
+            <div id="listaTickets">
+            <p>No hay tickets todavía.</p>
+            <label for="estadoTicket">Estado del ticket:</label>
+                <select id="estadoTicket">
+                   <option value="pendiente">Pendiente</option>
+                    <option value="en_proceso">En proceso</option>
+                    <option value="atendiendo">Atendiendo</option>
+                </select>
+            </div>
+
 
         </section>
 
@@ -111,8 +131,11 @@
             <hr>
 
             <h3>Mis Surtidores Favoritos</h3>
-            <label for="surtidorFavoritoId">ID de Surtidor favorito:</label>
-            <input type="number" id="surtidorFavoritoId" min="1" />
+            <label for="surtidorSeleccionado">Selecciona surtidor:</label>
+            <select id="surtidorSeleccionado">
+                <option value="1">Surtidor 1</option>
+                <option value="2">Surtidor 2</option>
+            </select>
             <button id="marcarFavorito">Marcar como favorito</button>
             <button id="verificarFavoritos">Verificar disponibilidad en favoritos</button>
             <div id="notificaciones"></div>
@@ -124,13 +147,7 @@
             <div id="ticketInfo">
                 <p>Su número de ticket: <span id="numeroTicket">-</span></p>
                 <p id="mensajeTicket"></p>
-
-                <label for="estadoTicket">Estado del ticket:</label>
-                <select id="estadoTicket">
-                    <option value="pendiente">Pendiente</option>
-                    <option value="en_proceso">En proceso</option>
-                    <option value="atendiendo">Atendiendo</option>
-                </select>
+                <div id="notificacionEstadoTicket" class="notificacion"></div>
             </div>
 
         </section>
