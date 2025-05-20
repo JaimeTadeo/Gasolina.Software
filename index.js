@@ -523,3 +523,35 @@ function actualizarListaTicketsAdmin() {
         favoritosPlaceHolderDiv.innerHTML = `<p style="color: orange;">Funcionalidad de verificar favoritos no implementada.</p>`;
 
     });
+
+    // Variables de control
+let filaDeTickets = 0;
+const minutosPorPersona = 3;
+
+// Elementos del DOM
+const btnSolicitarTicket = document.getElementById('solicitarTicket');
+const btnUsarTicket = document.querySelector('#ticketInfo button'); // botón "Usar mi ticket"
+const divTiempoEstimado = document.getElementById('tiempoEstimado');
+const spanNumeroTicket = document.getElementById('numeroTicket');
+
+// Manejador de solicitud de ticket
+btnSolicitarTicket.addEventListener('click', () => {
+    filaDeTickets++;
+    const miNumero = filaDeTickets;
+    spanNumeroTicket.textContent = miNumero;
+    actualizarTiempoEstimado();
+});
+
+// Manejador de uso del ticket
+btnUsarTicket.addEventListener('click', () => {
+    if (filaDeTickets > 0) {
+        filaDeTickets--;
+        actualizarTiempoEstimado();
+    }
+});
+
+// Función para mostrar el tiempo estimado
+function actualizarTiempoEstimado() {
+    const tiempo = filaDeTickets * minutosPorPersona;
+    divTiempoEstimado.textContent = `Tiempo estimado: ${tiempo} minutos`;
+}
