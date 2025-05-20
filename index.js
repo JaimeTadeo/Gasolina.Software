@@ -40,8 +40,8 @@
 
     
     // Cuando reportes un surtidor sin gasolina:
-    const resultado = verificarDisponibilidadAlternativa(idSurtidorReportado);
-    displaySystemNotification(resultado.mensaje, resultado.alternativoDisponible ? 'info' : 'warning');
+    //const resultado = verificarDisponibilidadAlternativa(idSurtidorReportado);
+   // displaySystemNotification(resultado.mensaje, resultado.alternativoDisponible ? 'info' : 'warning');
 
     let isAvailabilityShown = false;
 

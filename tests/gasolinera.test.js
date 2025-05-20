@@ -2,19 +2,19 @@ import {
     reportarFila, 
     obtenerReporteFilas, 
     notificarAdministrador,
-    calificarSurtidor,       // Añadir estas líneas
-    obtenerCalificaciones ,   // <-- Importación faltante
+    calificarSurtidor,       
+    obtenerCalificaciones , 
     obtenerSurtidorMasLleno
 
 } from "../src/gasolineraAdmin.js";
 
-// ... (código existente)
+
 
 describe("Sistema de calificaciones", () => {
     let surtidores;
 
     beforeEach(() => {
-        // Configuración corregida (no usar null)
+       
         surtidores = {
             1: { litros: 1000, calificaciones: { positivas: 0, negativas: 0 } },
             2: { litros: 800, calificaciones: { positivas: 3, negativas: 1 } }
