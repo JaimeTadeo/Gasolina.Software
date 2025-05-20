@@ -33,3 +33,19 @@ export function obtenerEstadoTicket(id) {
   if (!tickets[id]) throw new Error('Ticket no encontrado');
   return tickets[id].estado;
 }
+const TIEMPO_POR_TICKET_MINUTOS = 2;
+
+export function calcularTiempoEstimado(id) {
+  if (!tickets[id]) throw new Error('Ticket no encontrado');
+
+  const idsAnteriores = Object.keys(tickets)
+    .map(Number)
+    .filter(tid => tid < id && tickets[tid].estado !== 'atendiendo');
+
+  const tiempoEstimado = idsAnteriores.length * TIEMPO_POR_TICKET_MINUTOS;
+
+  return {
+    tiempo: tiempoEstimado,
+    mensaje: `Tu tiempo estimado de atención es ${tiempoEstimado} minutos`
+  };
+}

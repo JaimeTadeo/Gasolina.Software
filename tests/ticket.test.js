@@ -1,4 +1,4 @@
-import { generarTicket, resetContador, usarTicket, cambiarEstadoTicket, obtenerEstadoTicket } from '../src/ticket.js';
+import { generarTicket, resetContador, usarTicket, cambiarEstadoTicket, obtenerEstadoTicket,calcularTiempoEstimado } from '../src/ticket.js';
 
 describe('Uso de Tickets', () => {
   beforeEach(() => {
@@ -44,5 +44,22 @@ describe('Cambio de estado del ticket', () => {
 
   it('no debería cambiar estado de ticket inexistente', () => {
     expect(() => cambiarEstadoTicket(99, 'atendiendo')).toThrow('Ticket no encontrado');
+  });
+});
+
+
+describe('Calcular tiempo estimado', () => {
+  beforeEach(() => {
+    resetContador();
+  });
+
+  it('debería calcular correctamente el tiempo estimado', () => {
+    const t1 = generarTicket(); // 1
+    const t2 = generarTicket(); // 2
+    const t3 = generarTicket(); // 3
+
+    const estimadoT3 = calcularTiempoEstimado(t3);
+    expect(estimadoT3.tiempo).toBe(4); // 2 tickets antes (1 y 2), 2 min c/u
+    expect(estimadoT3.mensaje).toBe("Tu tiempo estimado de atención es 4 minutos");
   });
 });
