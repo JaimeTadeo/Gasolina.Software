@@ -1,22 +1,16 @@
-import { reportarSurtidorSinGasolina, obtenerReportesDeSurtidores } from '../src/reportarSurtidor';
+import { 
+  reportarSurtidorSinGasolina, 
+  obtenerReportesDeSurtidores,
+  _limpiarReportes
+} from '../src/reportarSurtidor';
 
-describe('Reportar Surtidor Sin Gasolina', () => {
+describe('Reporte básico de surtidores', () => {
   beforeEach(() => {
-    global.reportesSurtidores = [];
+    _limpiarReportes();
   });
 
-  it('debería guardar el ID del surtidor reportado', () => {
-    reportarSurtidorSinGasolina('SURT-001');
-
-    const reportes = obtenerReportesDeSurtidores();
-    expect(reportes).toContain('SURT-001');
-  });
-
-  it('debería evitar reportes duplicados para el mismo surtidor', () => {
-    reportarSurtidorSinGasolina('SURT-001');
-    reportarSurtidorSinGasolina('SURT-001');
-
-    const reportes = obtenerReportesDeSurtidores();
-    expect(reportes.length).toBe(1);
+  it('debería registrar un surtidor sin gasolina', () => {
+    reportarSurtidorSinGasolina(1);
+    expect(obtenerReportesDeSurtidores()).toContain(1);
   });
 });

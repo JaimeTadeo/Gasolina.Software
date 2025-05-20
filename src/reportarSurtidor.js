@@ -1,12 +1,13 @@
 let reportesSurtidores = [];
 
 export function reportarSurtidorSinGasolina(idSurtidor) {
-  if (!reportesSurtidores.includes(idSurtidor)) {
-    reportesSurtidores.push(idSurtidor);
-    console.log(`[Reportes Sin Gas] Surtidor ${idSurtidor} añadido a la lista de reportes.`);
-  }
+  reportesSurtidores.push(idSurtidor);
 }
 
 export function obtenerReportesDeSurtidores() {
-  return reportesSurtidores;
+  return [...reportesSurtidores];
+}
+
+export function _limpiarReportes() {
+  reportesSurtidores = [];
 }
