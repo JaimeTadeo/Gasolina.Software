@@ -13,4 +13,10 @@ describe('Reporte básico de surtidores', () => {
     reportarSurtidorSinGasolina(1);
     expect(obtenerReportesDeSurtidores()).toContain(1);
   });
+  
+  it('no debería permitir reportes duplicados', () => {
+    reportarSurtidorSinGasolina(1);
+    reportarSurtidorSinGasolina(1);
+    expect(obtenerReportesDeSurtidores().length).toBe(1);
+  });
 });

@@ -1,7 +1,9 @@
 let reportesSurtidores = [];
 
 export function reportarSurtidorSinGasolina(idSurtidor) {
-  reportesSurtidores.push(idSurtidor);
+  if (!reportesSurtidores.includes(idSurtidor)) {
+    reportesSurtidores.push(idSurtidor);
+  }
 }
 
 export function obtenerReportesDeSurtidores() {
