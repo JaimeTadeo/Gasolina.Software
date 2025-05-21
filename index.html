@@ -108,6 +108,20 @@
 
             <hr>
 
+            <h3>Filtrar Surtidores por Zona</h3>
+            <label for="zonaSeleccionada">Seleccionar Zona:</label>
+            <select id="zonaSeleccionada">
+                <option value="todas">Todas las Zonas</option>
+                <option value="norte">Zona Norte</option>
+                <option value="sur">Zona Sur</option>
+                <option value="este">Zona Este</option>
+                <option value="oeste">Zona Oeste</option>
+            </select>
+            <button id="filtrarPorZona">Filtrar</button>
+            <div id="resultadoFiltroZona"></div>
+
+            <hr>
+
             <h3>Calificar Atención</h3>
             <label for="surtidorCalificacion">Selecciona surtidor:</label>
             <select id="surtidorCalificacion">
@@ -149,7 +163,7 @@
                 <p id="mensajeTicket"></p>
                 <div id="notificacionEstadoTicket" class="notificacion"></div>
             </div>
-            <!-- 🔽  Mostrar tiempo estimado -->
+            
             <div id="tiempoEstimado" style="margin-top: 10px; font-weight: bold;">
                 Tiempo estimado: -- minutos
             </div>

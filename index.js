@@ -10,6 +10,7 @@
         notificarAdministrador
     } from "./src/gasolineraAdmin.js";
     import { reportarSurtidorSinGasolina } from './src/reportarSurtidor.js';
+    import { filtrarSurtidoresPorZona } from './src/gasolineraZona.js';
     // import { gestionarSurtidoresFavoritos, notificarDisponibilidad } from './src/gasolineraNotificaciones.js';
     const botonMostrarDisponibilidad = document.getElementById("mostrarDisponibilidad");
     const resultadoDiv = document.getElementById("resultado");
@@ -37,6 +38,9 @@
     const botonMarcarFavorito = document.getElementById("marcarFavorito");
     const botonVerificarFavoritos = document.getElementById("verificarFavoritos");
     const notificacionesFavoritosDiv = document.getElementById("notificaciones")
+    const selectZona = document.getElementById("zonaSeleccionada");
+    const botonFiltrarPorZona = document.getElementById("filtrarPorZona");
+    const resultadoFiltroZonaDiv = document.getElementById("resultadoFiltroZona");
 
     
     // Cuando reportes un surtidor sin gasolina:
@@ -52,7 +56,8 @@
             litros: 1000,
             horario: { apertura: "08:00", cierre: "20:00" },
             filas: [],
-            calificaciones: { positivas: 0, negativas: 0 }
+            calificaciones: { positivas: 0, negativas: 0 },
+            zona: "norte" // Added zone
         },
         2: {
             id: 2,
@@ -60,7 +65,8 @@
             litros: 800,
             horario: { apertura: "09:00", cierre: "18:00" },
             filas: [],
-            calificaciones: { positivas: 0, negativas: 0 }
+            calificaciones: { positivas: 0, negativas: 0 },
+            zona: "sur" // Added zone
         }
     };
 
@@ -92,20 +98,25 @@
         }
     }
 
-
-    function renderizarSurtidores() {
-        const dataArray = Object.entries(surtidores).map(([id, s]) => ({
+    function renderizarSurtidores(filteredSurtidores = null) {
+        const dataToRender = filteredSurtidores || Object.entries(surtidores).map(([id, s]) => ({
             id: parseInt(id),
             litros: s.litros
         }));
 
-        const mensajes = gasolinera(true, dataArray);
+        const mensajes = gasolinera(true, dataToRender);
 
-        resultadoDiv.innerHTML = "";
+        const targetDiv = filteredSurtidores ? resultadoFiltroZonaDiv : resultadoDiv;
+        targetDiv.innerHTML = "";
+        if (mensajes.length === 0) {
+            targetDiv.innerHTML = "<p>No hay surtidores disponibles en esta zona.</p>";
+            return;
+        }
+
         mensajes.forEach(mensaje => {
             const p = document.createElement("p");
             p.textContent = mensaje;
-            resultadoDiv.appendChild(p);
+            targetDiv.appendChild(p);
         });
     }
 
@@ -490,6 +501,12 @@ function actualizarListaTicketsAdmin() {
     setInterval(actualizarAlertaSurtidoresUsuario, 30000);
     setInterval(actualizarReportesFilasUsuarioView, 30000);
 
+    botonFiltrarPorZona.addEventListener("click", () => {
+        const zonaSeleccionada = selectZona.value;
+        const surtidoresFiltrados = filtrarSurtidoresPorZona(surtidores, zonaSeleccionada);
+        renderizarSurtidores(surtidoresFiltrados);
+    });
+
 
     botonMarcarFavorito.addEventListener("click", () => {
         const clienteId = "cliente_1";
@@ -555,3 +572,4 @@ function actualizarTiempoEstimado() {
     const tiempo = filaDeTickets * minutosPorPersona;
     divTiempoEstimado.textContent = `Tiempo estimado: ${tiempo} minutos`;
 }
+ 
