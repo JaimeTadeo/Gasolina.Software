@@ -555,3 +555,80 @@ function actualizarTiempoEstimado() {
     const tiempo = filaDeTickets * minutosPorPersona;
     divTiempoEstimado.textContent = `Tiempo estimado: ${tiempo} minutos`;
 }
+
+/*-------------------------------------------------------Buscar surtidor------------------------------------------------------------------*/
+
+// Importa la función que acabamos de crear
+import { buscarSurtidorPorNombre } from './src/buscarSurtidor.js'; // Ajusta la ruta si es necesario
+
+// Suponiendo que tienes una lista de surtidores disponible globalmente o la cargas de alguna forma.
+// Para el ejemplo, usaré la misma lista de las pruebas.
+// En una aplicación real, esta lista podría venir de una API, otro módulo, etc.
+const LISTA_DE_TODOS_LOS_SURTIDORES = [
+    { id: 1, nombre: 'Surtidor Central', litros: 500, ubicacion: 'Calle Falsa 123', horario: '07:00 - 22:00' },
+    { id: 2, nombre: 'Surtidor Norte', litros: 1000, ubicacion: 'Avenida Siempre Viva 742', horario: '24 horas' },
+    { id: 3, nombre: 'Surtidor SUR', litros: 0, ubicacion: 'Boulevard de los Sueños Rotos', horario: '08:00 - 20:00' },
+    { id: 4, nombre: 'Surtidor Oeste Express', litros: 300, ubicacion: 'Carretera Perdida km 5', horario: '06:00 - 23:00' },
+    // ...más surtidores
+];
+
+// --- Código existente de tu index.js ---
+// ... (todo tu código actual de gasolinera, admin, notificaciones, tickets, etc.)
+// ... recuerda importar las otras funciones que usas de tus otros módulos aquí también.
+// Ejemplo:
+// import gasolinera from './src/gasolinera.js';
+// import { agregarGasolina, notificarCamionLlegado } from './src/gasolineraAdmin.js';
+// etc.
+
+// --- Nueva lógica para buscar surtidor ---
+document.addEventListener('DOMContentLoaded', () => {
+    const inputNombreSurtidor = document.getElementById('nombreSurtidorInput');
+    const botonBuscar = document.getElementById('buscarSurtidorBtn');
+    const divResultado = document.getElementById('resultadoBusquedaSurtidor');
+
+    if (botonBuscar) {
+        botonBuscar.addEventListener('click', () => {
+            const nombreABuscar = inputNombreSurtidor.value;
+            const surtidorEncontrado = buscarSurtidorPorNombre(LISTA_DE_TODOS_LOS_SURTIDORES, nombreABuscar);
+
+            if (surtidorEncontrado) {
+                divResultado.innerHTML = `
+                    <h3>Surtidor Encontrado:</h3>
+                    <p><strong>Nombre:</strong> ${surtidorEncontrado.nombre}</p>
+                    <p><strong>ID:</strong> ${surtidorEncontrado.id}</p>
+                    <p><strong>Litros disponibles:</strong> ${surtidorEncontrado.litros}</p>
+                    <p><strong>Ubicación:</strong> ${surtidorEncontrado.ubicacion}</p>
+                    <p><strong>Horario:</strong> ${surtidorEncontrado.horario || 'No especificado'}</p>
+                `;
+            } else {
+                divResultado.innerHTML = `<p>No se encontró ningún surtidor con el nombre "${nombreABuscar}".</p>`;
+            }
+        });
+    } else {
+        // Es buena práctica verificar si los elementos existen, especialmente si index.js
+        // se carga en páginas donde estos elementos podrían no estar.
+        console.warn("El botón de búsqueda 'buscarSurtidorBtn' o el input 'nombreSurtidorInput' no se encontraron en el DOM.");
+    }
+
+    // Aquí puedes seguir inicializando otras funcionalidades de tu página
+    // por ejemplo, cargar la disponibilidad inicial de gasolina, etc.
+    // Ejemplo:
+    // const disponibilidadInicial = gasolinera(false, LISTA_DE_TODOS_LOS_SURTIDORES);
+    // console.log(disponibilidadInicial); // "Ver disponibilidad de gasolina"
+    // O si quieres mostrar la lista:
+    // const listaSurtidoresElem = document.getElementById('lista-surtidores'); // Asume que tienes este elemento
+    // if (listaSurtidoresElem) {
+    //   const infoSurtidores = gasolinera(true, LISTA_DE_TODOS_LOS_SURTIDORES);
+    //   infoSurtidores.forEach(info => {
+    //      const p = document.createElement('p');
+    //      p.textContent = info;
+    //      listaSurtidoresElem.appendChild(p);
+    //   });
+    // }
+});
+
+// --- Fin de la nueva lógica ---
+
+// Asegúrate de exportar funciones desde index.js si otros scripts las necesitan,
+// o simplemente ejecuta el código que interactúa con el DOM como arriba.
+// Por ejemplo, si index.js es el punto de entrada principal que configura todo.
