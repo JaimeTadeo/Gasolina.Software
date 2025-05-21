@@ -61,6 +61,18 @@ export function calcularTiempoEstimado(id) {
   };
 }
 
-export function obtenerHistorialTickets() {
-  return [...ticketsHistory]; // ← Devolvemos copia
+export function obtenerHistorialTickets(fechaInicio = null, fechaFin = null) {
+  if (!fechaInicio && !fechaFin) return [...ticketsHistory]; // ← Sin filtros
+
+  return ticketsHistory.filter(ticket => {
+    const ticketDate = new Date(ticket.fecha);
+    return (
+      (!fechaInicio || ticketDate >= new Date(fechaInicio)) &&
+      (!fechaFin || ticketDate <= new Date(fechaFin))
+    );
+  });
+}
+
+export function agregarTicketAlHistorial(ticket) {
+  ticketsHistory.push(ticket);
 }
