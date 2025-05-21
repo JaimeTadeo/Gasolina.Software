@@ -19,8 +19,14 @@ export function generarTicket() {
 export function usarTicket(id) {
   if (!tickets[id] || tickets[id].usado) return false;
   tickets[id].usado = true;
+  // Archivar el ticket cuando se usa
+  archivedTickets.push({
+    ...tickets[id],
+    archivadoEl: new Date()
+  });
   return true;
 }
+
 export function resetContador() {
   contador = 0;
   // Limpiar arrays sin reasignar (manteniendo la referencia)
@@ -76,3 +82,8 @@ export function obtenerHistorialTickets(fechaInicio = null, fechaFin = null) {
 export function agregarTicketAlHistorial(ticket) {
   ticketsHistory.push(ticket);
 }
+
+export function obtenerTicketsArchivados() {
+  return [...archivedTickets]; // Devuelve copia del array
+}
+

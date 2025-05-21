@@ -1,4 +1,4 @@
-import { generarTicket, resetContador, usarTicket, cambiarEstadoTicket, obtenerEstadoTicket,calcularTiempoEstimado,obtenerHistorialTickets,agregarTicketAlHistorial } from '../src/ticket.js';
+import { generarTicket, resetContador, usarTicket, cambiarEstadoTicket, obtenerEstadoTicket,calcularTiempoEstimado,obtenerHistorialTickets,agregarTicketAlHistorial,obtenerTicketsArchivados } from '../src/ticket.js';
 
 describe('Uso de Tickets', () => {
   beforeEach(() => {
@@ -97,5 +97,20 @@ it('debe filtrar tickets por rango de fechas', () => {
   const historialReciente = obtenerHistorialTickets(hoy.toISOString());
   expect(historialReciente.length).toBe(1);
   expect(historialReciente[0].id).toBe(ticketHoy);
+});
+
+describe('Archivado de Tickets', () => {
+  beforeEach(() => {
+    resetContador();
+  });
+
+  it('debe mover tickets usados a archivados', () => {
+    const ticketId = generarTicket();
+    usarTicket(ticketId);
+    const archivados = obtenerTicketsArchivados();
+    expect(archivados.length).toBe(1);
+    expect(archivados[0].id).toBe(ticketId);
+    expect(archivados[0].usado).toBe(true);
+  });
 });
 });
