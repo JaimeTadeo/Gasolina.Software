@@ -1,6 +1,7 @@
 let contador = 0;
 const tickets = {};
-const ticketsHistory = [];
+let ticketsHistory = []; // Cambiado a let para permitir reasignación
+let archivedTickets = [];
 
 export function generarTicket() {
   const id = ++contador;
@@ -8,10 +9,10 @@ export function generarTicket() {
     id,
     usado: false,
     estado: 'pendiente',
-    fecha: new Date() // <-- Registrar fecha de creación
+    fecha: new Date()
   };
   tickets[id] = ticketData;
-  ticketsHistory.push({...ticketData}); // Copia para historial
+  ticketsHistory.push({...ticketData}); // Usar spread para evitar referencias
   return id;
 }
 
@@ -20,9 +21,11 @@ export function usarTicket(id) {
   tickets[id].usado = true;
   return true;
 }
-
 export function resetContador() {
   contador = 0;
+  // Limpiar arrays sin reasignar (manteniendo la referencia)
+  ticketsHistory.length = 0;
+  archivedTickets.length = 0;
   for (const id in tickets) {
     delete tickets[id];
   }
@@ -59,5 +62,5 @@ export function calcularTiempoEstimado(id) {
 }
 
 export function obtenerHistorialTickets() {
-  return []; // ← Implementación mínima
+  return [...ticketsHistory]; // ← Devolvemos copia
 }

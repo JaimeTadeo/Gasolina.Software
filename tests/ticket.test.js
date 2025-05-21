@@ -64,14 +64,20 @@ describe('Calcular tiempo estimado', () => {
   });
 });
 
-
 describe('Historial de Tickets', () => {
   beforeEach(() => {
-    resetContador();
+    resetContador(); // Ahora sí limpia completamente
   });
 
   it('debe devolver un array vacío si no hay tickets', () => {
-    const historial = obtenerHistorialTickets(); // ← Función que aún no existe
-    expect(historial).toEqual([]); // ← Prueba fallará inicialmente
+    const historial = obtenerHistorialTickets();
+    expect(historial).toEqual([]);
+  });
+
+  it('debe registrar tickets nuevos en el historial', () => {
+    const ticketId = generarTicket();
+    const historial = obtenerHistorialTickets();
+    expect(historial.length).toBe(1);
+    expect(historial[0].id).toBe(ticketId);
   });
 });
