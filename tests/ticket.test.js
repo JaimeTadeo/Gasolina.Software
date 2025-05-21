@@ -1,4 +1,4 @@
-import { generarTicket, resetContador, usarTicket, cambiarEstadoTicket, obtenerEstadoTicket,calcularTiempoEstimado } from '../src/ticket.js';
+import { generarTicket, resetContador, usarTicket, cambiarEstadoTicket, obtenerEstadoTicket,calcularTiempoEstimado,obtenerHistorialTickets } from '../src/ticket.js';
 
 describe('Uso de Tickets', () => {
   beforeEach(() => {
@@ -61,5 +61,17 @@ describe('Calcular tiempo estimado', () => {
     const estimadoT3 = calcularTiempoEstimado(t3);
     expect(estimadoT3.tiempo).toBe(4); // 2 tickets antes (1 y 2), 2 min c/u
     expect(estimadoT3.mensaje).toBe("Tu tiempo estimado de atención es 4 minutos");
+  });
+});
+
+
+describe('Historial de Tickets', () => {
+  beforeEach(() => {
+    resetContador();
+  });
+
+  it('debe devolver un array vacío si no hay tickets', () => {
+    const historial = obtenerHistorialTickets(); // ← Función que aún no existe
+    expect(historial).toEqual([]); // ← Prueba fallará inicialmente
   });
 });

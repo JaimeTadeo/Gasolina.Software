@@ -1,9 +1,17 @@
 let contador = 0;
 const tickets = {};
+const ticketsHistory = [];
 
 export function generarTicket() {
   const id = ++contador;
-  tickets[id] = { usado: false, estado: 'pendiente' };
+  const ticketData = {
+    id,
+    usado: false,
+    estado: 'pendiente',
+    fecha: new Date() // <-- Registrar fecha de creación
+  };
+  tickets[id] = ticketData;
+  ticketsHistory.push({...ticketData}); // Copia para historial
   return id;
 }
 
@@ -48,4 +56,8 @@ export function calcularTiempoEstimado(id) {
     tiempo: tiempoEstimado,
     mensaje: `Tu tiempo estimado de atención es ${tiempoEstimado} minutos`
   };
+}
+
+export function obtenerHistorialTickets() {
+  return []; // ← Implementación mínima
 }

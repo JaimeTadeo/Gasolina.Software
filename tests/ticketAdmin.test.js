@@ -5,6 +5,7 @@ import {
     obtenerTodosLosTickets
 } from '../src/ticketAdmi.js';
 
+
 describe("Gestión de Tickets", () => {
     let tickets;
 
