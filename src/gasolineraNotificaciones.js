@@ -23,7 +23,7 @@ export function gestionarSurtidoresFavoritos(usuarioId, surtidorId = null, accio
     return [...favoritosPorUsuario[usuarioId]];
 }
 
-export function notificarDisponibilidad(surtidores, usuarioId, callback) {
+export function notificarDisponibilidad(surtidores, usuarioId, callback, notificarAlternativas = false) {
     // Convertir array a objeto si es necesario
     const surtidoresObj = Array.isArray(surtidores) 
         ? surtidores.reduce((acc, surtidor) => {
@@ -35,7 +35,7 @@ export function notificarDisponibilidad(surtidores, usuarioId, callback) {
     const favoritos = gestionarSurtidoresFavoritos(usuarioId);
     const notificaciones = [];
 
-    // Verificar favoritos con gasolina
+    // 1. Notificar favoritos con gasolina (CHECKLIST: Notificar al usuario que su surtidor hay gasolina)
     favoritos.forEach(surtidorId => {
         const surtidor = surtidoresObj[surtidorId];
         if (surtidor && surtidor.litros > 0) {
@@ -52,8 +52,17 @@ export function notificarDisponibilidad(surtidores, usuarioId, callback) {
     // Enviar notificaciones de favoritos
     notificaciones.forEach(notif => callback(notif.mensaje));
 
-    // Eliminamos completamente la lógica de notificación de alternativas
-    // para cumplir con los requisitos de los tests
+    // 2. Notificar alternativas si es necesario (CHECKLIST: Notificar si la otra gasolina no esté pues que vaya a la siguiente favorita)
+    if (notificarAlternativas && notificaciones.length === 0 && favoritos.length > 0) {
+        const surtidoresConGasolina = Object.values(surtidoresObj).filter(
+            s => s.litros > 0 && !favoritos.includes(s.id)
+        );
+
+        if (surtidoresConGasolina.length > 0) {
+            const surtidorRecomendado = surtidoresConGasolina[0];
+            callback(`⚠️ Tus surtidores favoritos no tienen gasolina. Te recomendamos el Surtidor ${surtidorRecomendado.id} (${surtidorRecomendado.nombre || `Surtidor ${surtidorRecomendado.id}`}) con ${surtidorRecomendado.litros} litros.`);
+        }
+    }
 
     return notificaciones.length;
 }

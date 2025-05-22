@@ -604,10 +604,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // ===== AÑADE ESTO AL FINAL =====
-    // Verificación automática de favoritos cada 5 minutos (300,000 ms)
+
     const verificarFavoritos = () => {
-        const clienteId = "cliente_1"; // O usa tu sistema de autenticación
+        const clienteId = "cliente_1"; 
         notificarDisponibilidad(surtidores, clienteId, (mensaje) => {
             if (!document.hidden) {
                 displaySystemNotification(mensaje, mensaje.includes("✅") ? 'success' : 'warning');
