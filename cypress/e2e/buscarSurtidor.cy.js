@@ -1,9 +1,6 @@
-// cypress/e2e/buscarSurtidor.cy.js
-
 describe('Pruebas de búsqueda de surtidores', () => {
   beforeEach(() => {
-    // Visitar la página donde está implementada la funcionalidad
-    cy.visit('http://localhost:3000'); // Ajusta la URL según corresponda
+    cy.visit('http://localhost:3000'); 
   });
 
   it('Debería encontrar un surtidor por nombre exacto', () => {
@@ -45,7 +42,7 @@ describe('Pruebas de búsqueda de surtidores', () => {
   });
 
   it('Debería manejar búsqueda con cadena vacía', () => {
-    cy.get('#nombreSurtidorInput').focus().blur(); // Simular dejar el campo vacío
+    cy.get('#nombreSurtidorInput').focus().blur(); 
     cy.get('#buscarSurtidorBtn').click();
     
     cy.get('#resultadoBusquedaSurtidor')
@@ -53,7 +50,6 @@ describe('Pruebas de búsqueda de surtidores', () => {
   });
 
   it('Debería mostrar la disponibilidad inicial de surtidores', () => {
-    // Verificar que se muestra la disponibilidad inicial
     cy.get('#disponibilidadGasolina').within(() => {
       cy.contains('Disponibilidad Actual:').should('exist');
       cy.contains('Surtidor Principal Centro').should('exist');

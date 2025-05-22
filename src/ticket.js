@@ -1,6 +1,6 @@
 let contador = 0;
 const tickets = {};
-let ticketsHistory = []; // Cambiado a let para permitir reasignación
+let ticketsHistory = []; 
 let archivedTickets = [];
 
 export function generarTicket() {
@@ -12,14 +12,13 @@ export function generarTicket() {
     fecha: new Date()
   };
   tickets[id] = ticketData;
-  ticketsHistory.push({...ticketData}); // Usar spread para evitar referencias
+  ticketsHistory.push({...ticketData}); 
   return id;
 }
 
 export function usarTicket(id) {
   if (!tickets[id] || tickets[id].usado) return false;
   tickets[id].usado = true;
-  // Archivar el ticket cuando se usa
   archivedTickets.push({
     ...tickets[id],
     archivadoEl: new Date()
@@ -29,7 +28,6 @@ export function usarTicket(id) {
 
 export function resetContador() {
   contador = 0;
-  // Limpiar arrays sin reasignar (manteniendo la referencia)
   ticketsHistory.length = 0;
   archivedTickets.length = 0;
   for (const id in tickets) {
@@ -68,7 +66,7 @@ export function calcularTiempoEstimado(id) {
 }
 
 export function obtenerHistorialTickets(fechaInicio = null, fechaFin = null) {
-  if (!fechaInicio && !fechaFin) return [...ticketsHistory]; // ← Sin filtros
+  if (!fechaInicio && !fechaFin) return [...ticketsHistory]; 
 
   return ticketsHistory.filter(ticket => {
     const ticketDate = new Date(ticket.fecha);
@@ -84,6 +82,6 @@ export function agregarTicketAlHistorial(ticket) {
 }
 
 export function obtenerTicketsArchivados() {
-  return [...archivedTickets]; // Devuelve copia del array
+  return [...archivedTickets]; 
 }
 

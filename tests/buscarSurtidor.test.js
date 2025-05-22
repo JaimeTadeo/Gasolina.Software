@@ -19,8 +19,7 @@ describe('Función buscarSurtidorPorNombre', () => {
     });
 
     test('debería encontrar un surtidor por su nombre ignorando mayúsculas/minúsculas', () => {
-        // Esta prueba fallará inicialmente si la implementación es sensible a mayúsculas.
-        // La idea es que la función maneje esto.
+
         const resultado = buscarSurtidorPorNombre(surtidoresDePrueba, 'surtidor sur');
         expect(resultado).toEqual(surtidoresDePrueba[2]);
     });
@@ -48,7 +47,7 @@ describe('Función buscarSurtidorPorNombre', () => {
             { id: 5, nombre: 'Surtidor Norte', litros: 200, ubicacion: 'Otra Calle' }
         ];
         const resultado = buscarSurtidorPorNombre(surtidoresConDuplicados, 'Surtidor Norte');
-        // Esperamos el primero que coincida
+
         expect(resultado).toEqual(surtidoresDePrueba[1]);
     });
 });

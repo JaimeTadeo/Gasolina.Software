@@ -282,3 +282,8 @@ progress {
     font-weight: bold;
     color: #0a6e0a;
 }
+
+#tiempoEstimado {
+    margin-top: 10px;
+    font-weight: bold;
+}

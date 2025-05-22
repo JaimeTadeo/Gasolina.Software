@@ -18,7 +18,6 @@ export function cambiarEstadoTicket(tickets, id, nuevoEstado) {
 
   tickets[id].estado = nuevoEstado;
 
-  // Archivar si está marcado como atendido
   if (nuevoEstado === 'atendiendo') {
     archivedTickets.push({...tickets[id], archivedAt: new Date()});
   }

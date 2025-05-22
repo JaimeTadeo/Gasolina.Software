@@ -11,7 +11,6 @@
     } from "./src/gasolineraAdmin.js";
     import { reportarSurtidorSinGasolina } from './src/reportarSurtidor.js';
     import { filtrarSurtidoresPorZona } from './src/gasolineraZona.js';
-    // import { gestionarSurtidoresFavoritos, notificarDisponibilidad } from './src/gasolineraNotificaciones.js';
     const botonMostrarDisponibilidad = document.getElementById("mostrarDisponibilidad");
     const resultadoDiv = document.getElementById("resultado");
     const botonAgregarGasolina = document.getElementById("agregarGasolina");
@@ -42,11 +41,6 @@
     const botonFiltrarPorZona = document.getElementById("filtrarPorZona");
     const resultadoFiltroZonaDiv = document.getElementById("resultadoFiltroZona");
 
-    
-    // Cuando reportes un surtidor sin gasolina:
-    //const resultado = verificarDisponibilidadAlternativa(idSurtidorReportado);
-   // displaySystemNotification(resultado.mensaje, resultado.alternativoDisponible ? 'info' : 'warning');
-
     let isAvailabilityShown = false;
 
     const surtidores = {
@@ -57,7 +51,7 @@
             horario: { apertura: "08:00", cierre: "20:00" },
             filas: [],
             calificaciones: { positivas: 0, negativas: 0 },
-            zona: "norte" // Added zone
+            zona: "norte" 
         },
         2: {
             id: 2,
@@ -66,7 +60,7 @@
             horario: { apertura: "09:00", cierre: "18:00" },
             filas: [],
             calificaciones: { positivas: 0, negativas: 0 },
-            zona: "sur" // Added zone
+            zona: "sur" 
         }
     };
 
@@ -358,13 +352,9 @@
     });
     });
 
-
-    /*----------------------------------------------------------------------------------------------------------*/
-    /* ---------- Sistema de Tickets ---------- */
     let miTicket = null;
     const usarTicketBtn = document.createElement('button');
 
-    // Configurar botón "Usar mi ticket"
     usarTicketBtn.textContent = 'Usar mi ticket';
     usarTicketBtn.id = 'usarTicketBtn';
     usarTicketBtn.style.cssText = `
@@ -378,7 +368,6 @@
         display: block;
     `;
 
-    // Función para usar el ticket
     usarTicketBtn.addEventListener('click', () => {
     const mensajeTicket = document.getElementById('mensajeTicket');
     
@@ -394,17 +383,15 @@
         mensajeTicket.style.color = 'green';
         usarTicketBtn.disabled = true;
         document.getElementById('numeroTicket').textContent = '-';
-        miTicket = null; // Limpiar el ticket después de usarlo
+        miTicket = null; 
     } else {
         mensajeTicket.textContent = `❌ El ticket ${miTicket} ya fue usado o no es válido.`;
         mensajeTicket.style.color = 'red';
     }
     });
 
-    // Insertar botón en el DOM
-    document.getElementById('ticketInfo').appendChild(usarTicketBtn);
 
-    // Evento para solicitar ticket
+    document.getElementById('ticketInfo').appendChild(usarTicketBtn);
     document.getElementById('solicitarTicket').addEventListener('click', () => {
     miTicket = generarTicket();
     document.getElementById('numeroTicket').textContent = miTicket;
@@ -412,9 +399,8 @@
     document.getElementById('mensajeTicket').style.color = 'black';
     usarTicketBtn.disabled = false;
     });
-let tickets = []; // lista de tickets
+let tickets = []; 
 
-// Usuario: Solicita ticket
 document.getElementById('solicitarTicket').addEventListener('click', () => {
     const nuevoTicket = {
         id: tickets.length + 1,
@@ -425,14 +411,12 @@ document.getElementById('solicitarTicket').addEventListener('click', () => {
     actualizarListaTicketsAdmin();
 });
 
-// Usuario: actualiza su vista de ticket
 function actualizarTicketUsuario(ticket) {
     document.getElementById('numeroTicket').innerText = ticket.id;
     document.getElementById('mensajeTicket').innerText = `Estado actual: ${ticket.estado}`;
     document.getElementById('estadoTicket').value = ticket.estado;
 }
 
-// Usuario: puede ver cambios en tiempo real si cambia estado (opcional)
 document.getElementById('estadoTicket').addEventListener('change', (e) => {
     const ticketId = parseInt(document.getElementById('numeroTicket').innerText);
     const nuevoEstado = e.target.value;
@@ -444,7 +428,6 @@ document.getElementById('estadoTicket').addEventListener('change', (e) => {
     }
 });
 
-// Admin: muestra todos los tickets y permite cambiar su estado
 function actualizarListaTicketsAdmin() {
     const contenedor = document.getElementById('listaTickets');
     contenedor.innerHTML = '';
@@ -468,7 +451,6 @@ function actualizarListaTicketsAdmin() {
         contenedor.appendChild(ticketDiv);
     });
 
-    // Escuchar cambios de estado en el lado del admin
     document.querySelectorAll('#listaTickets select').forEach(select => {
         select.addEventListener('change', (e) => {
             const ticketId = parseInt(e.target.getAttribute('data-id'));
@@ -477,7 +459,6 @@ function actualizarListaTicketsAdmin() {
             if (ticket) {
                 ticket.estado = nuevoEstado;
 
-                // Si el usuario tiene este ticket visible, actualizar su vista también
                 const ticketUsuarioId = parseInt(document.getElementById('numeroTicket').innerText);
                 if (ticketUsuarioId === ticket.id) {
                     actualizarTicketUsuario(ticket);
@@ -489,7 +470,6 @@ function actualizarListaTicketsAdmin() {
     });
 }
 
-    /*----------------------------------------------------------------------------------------------------------*/
 
 
     actualizarAlertaSurtidoresUsuario();
@@ -518,8 +498,6 @@ function actualizarListaTicketsAdmin() {
             return;
         }
 
-        // gestionarSurtidoresFavoritos(clienteId, surtidorId, 'agregar');
-
         console.log(`Funcionalidad de favoritos (marcar) - Cliente ${clienteId}, Surtidor ${surtidorId}`);
         const favoritosPlaceHolderDiv = document.getElementById("notificaciones");
         favoritosPlaceHolderDiv.innerHTML = `<p style="color: orange;">Funcionalidad de favoritos no implementada en este ejemplo. Surtidor ${surtidorId} marcado.</p>`;
@@ -529,11 +507,6 @@ function actualizarListaTicketsAdmin() {
     botonVerificarFavoritos.addEventListener("click", () => {
         const clienteId = "cliente_1";
 
-        // notificarDisponibilidad(surtidores, clienteId, (mensaje) => {
-        //    const p = document.createElement("p");
-        //    p.textContent = mensaje;
-        //    notificacionesFavoritosDiv.appendChild(p);
-        // });
 
         console.log(`Funcionalidad de favoritos (verificar) - Cliente ${clienteId}`);
         const favoritosPlaceHolderDiv = document.getElementById("notificaciones");
@@ -541,17 +514,15 @@ function actualizarListaTicketsAdmin() {
 
     });
 
-    // Variables de control
 let filaDeTickets = 0;
 const minutosPorPersona = 3;
 
-// Elementos del DOM
+
 const btnSolicitarTicket = document.getElementById('solicitarTicket');
-const btnUsarTicket = document.querySelector('#ticketInfo button'); // botón "Usar mi ticket"
+const btnUsarTicket = document.querySelector('#ticketInfo button'); 
 const divTiempoEstimado = document.getElementById('tiempoEstimado');
 const spanNumeroTicket = document.getElementById('numeroTicket');
 
-// Manejador de solicitud de ticket
 btnSolicitarTicket.addEventListener('click', () => {
     filaDeTickets++;
     const miNumero = filaDeTickets;
@@ -559,7 +530,7 @@ btnSolicitarTicket.addEventListener('click', () => {
     actualizarTiempoEstimado();
 });
 
-// Manejador de uso del ticket
+
 btnUsarTicket.addEventListener('click', () => {
     if (filaDeTickets > 0) {
         filaDeTickets--;
@@ -567,31 +538,21 @@ btnUsarTicket.addEventListener('click', () => {
     }
 });
 
-// Función para mostrar el tiempo estimado
+
 function actualizarTiempoEstimado() {
     const tiempo = filaDeTickets * minutosPorPersona;
     divTiempoEstimado.textContent = `Tiempo estimado: ${tiempo} minutos`;
 }
 
-/*-------------------------------------------------------Buscar surtidor------------------------------------------------------------------*/
 
-// index.js
+import { buscarSurtidorPorNombre } from './src/buscarSurtidor.js'; 
 
-// Importa la función que creamos (sin cambios aquí)
-import { buscarSurtidorPorNombre } from './src/buscarSurtidor.js'; // Ajusta la ruta si es necesario
-
-// Definimos la lista de surtidores con la estructura que necesitas: id, nombre, litros.
-// Estos son los 2 surtidores "por defecto" que mencionaste.
 const LISTA_DE_TODOS_LOS_SURTIDORES = [
     { id: 1, nombre: 'Surtidor Principal Centro', litros: 750 },
     { id: 2, nombre: 'Surtidor Avenida Veloz', litros: 400 }
-    // Puedes agregar más surtidores aquí si lo necesitas, manteniendo la misma estructura.
 ];
 
-// --- Código existente de tu index.js ---
-// ... (todo tu código actual de gasolinera, admin, notificaciones, tickets, etc.)
-// ... recuerda importar las otras funciones que usas de tus otros módulos aquí también.
-// --- Lógica para buscar surtidor (actualizada para mostrar menos campos) ---
+
 document.addEventListener('DOMContentLoaded', () => {
     const inputNombreSurtidor = document.getElementById('nombreSurtidorInput');
     const botonBuscar = document.getElementById('buscarSurtidorBtn');
@@ -603,7 +564,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const surtidorEncontrado = buscarSurtidorPorNombre(LISTA_DE_TODOS_LOS_SURTIDORES, nombreABuscar);
 
             if (surtidorEncontrado) {
-                // HTML actualizado para mostrar solo id, nombre y litros
+
                 divResultado.innerHTML = `
                     <h3>Surtidor Encontrado:</h3>
                     <p><strong>ID:</strong> ${surtidorEncontrado.id}</p>
@@ -618,12 +579,8 @@ document.addEventListener('DOMContentLoaded', () => {
         console.warn("Alguno de los elementos (input, botón o div de resultado) para la búsqueda de surtidor no se encontró en el DOM.");
     }
 
-    // Aquí puedes seguir inicializando otras funcionalidades de tu página
-    // por ejemplo, podrías querer mostrar esta lista de surtidores inicial usando tu función gasolinera:
-    // Ejemplo de cómo podrías usar tu función `gasolinera` con esta lista:
-    const elementoParaMostrarDisponibilidad = document.getElementById('disponibilidadGasolina'); // Asegúrate de tener este elemento en tu HTML
-    if (elementoParaMostrarDisponibilidad && typeof gasolinera === 'function') { // Verifica que gasolinera esté definida
-        // Para mostrar la información detallada de cada surtidor
+    const elementoParaMostrarDisponibilidad = document.getElementById('disponibilidadGasolina'); 
+    if (elementoParaMostrarDisponibilidad && typeof gasolinera === 'function') { 
         const infoSurtidores = gasolinera(true, LISTA_DE_TODOS_LOS_SURTIDORES);
         if (Array.isArray(infoSurtidores)) {
             elementoParaMostrarDisponibilidad.innerHTML = '<h3>Disponibilidad Actual:</h3>';
@@ -638,7 +595,3 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// --- Fin de la lógica de búsqueda ---
-
-// No olvides importar tu función 'gasolinera' si la usas como en el ejemplo de arriba
-// import gasolinera from './src/gasolinera.js';

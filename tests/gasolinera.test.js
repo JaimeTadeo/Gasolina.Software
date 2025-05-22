@@ -23,17 +23,17 @@ describe("Sistema de calificaciones", () => {
 
     test("Calificación positiva actualiza contador", () => {
         calificarSurtidor(surtidores, 1, true);
-        expect(surtidores[1].calificaciones.positivas).toBe(1); // ✅
+        expect(surtidores[1].calificaciones.positivas).toBe(1); 
     });
 
     test("Calificación negativa en surtidor existente", () => {
         calificarSurtidor(surtidores, 2, false);
-        expect(surtidores[2].calificaciones.negativas).toBe(2); // ✅
+        expect(surtidores[2].calificaciones.negativas).toBe(2); 
     });
 
     test("Obtener calificaciones de surtidor sin datos", () => {
         const result = obtenerCalificaciones(surtidores, 3);
-        expect(result).toEqual({ positivas: 0, negativas: 0 }); // ✅
+        expect(result).toEqual({ positivas: 0, negativas: 0 }); 
     });
     describe("Notificaciones de surtidores llenos", () => {
         const surtidoresMock = {

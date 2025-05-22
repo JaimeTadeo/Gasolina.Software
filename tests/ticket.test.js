@@ -54,19 +54,19 @@ describe('Calcular tiempo estimado', () => {
   });
 
   it('debería calcular correctamente el tiempo estimado', () => {
-    const t1 = generarTicket(); // 1
-    const t2 = generarTicket(); // 2
-    const t3 = generarTicket(); // 3
+    const t1 = generarTicket(); 
+    const t2 = generarTicket(); 
+    const t3 = generarTicket(); 
 
     const estimadoT3 = calcularTiempoEstimado(t3);
-    expect(estimadoT3.tiempo).toBe(4); // 2 tickets antes (1 y 2), 2 min c/u
+    expect(estimadoT3.tiempo).toBe(4); 
     expect(estimadoT3.mensaje).toBe("Tu tiempo estimado de atención es 4 minutos");
   });
 });
 
 describe('Historial de Tickets', () => {
   beforeEach(() => {
-    resetContador(); // Ahora sí limpia completamente
+    resetContador(); 
   });
 
   it('debe devolver un array vacío si no hay tickets', () => {
@@ -83,8 +83,7 @@ describe('Historial de Tickets', () => {
 
 it('debe filtrar tickets por rango de fechas', () => {
   const hoy = new Date();
-  const ticketHoy = generarTicket(); // ← Ticket reciente
-  // Simulamos un ticket de "ayer" usando la nueva función
+  const ticketHoy = generarTicket(); 
   const ayer = new Date();
   ayer.setDate(hoy.getDate() - 1);
   agregarTicketAlHistorial({

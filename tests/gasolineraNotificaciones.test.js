@@ -9,7 +9,6 @@ describe('Notificaciones para surtidores favoritos', () => {
   let clienteId;
 
   beforeEach(() => {
-    // Resetear el estado completamente antes de cada test
     resetearEstado();
     surtidores = [
       { id: 1, litros: 0, nombre: 'Surtidor 1' },
@@ -54,10 +53,7 @@ describe('Notificaciones para surtidores favoritos', () => {
 
     it('no debería notificar cuando un surtidor favorito no tiene gasolina', () => {
       const callback = jest.fn();
-      // Agregar solo el surtidor 1 (0 litros)
       gestionarSurtidoresFavoritos(clienteId, 1, 'agregar');
-
-      // Verificar que no se llame al callback
       notificarDisponibilidad(surtidores, clienteId, callback);
       expect(callback).not.toHaveBeenCalled();
     });

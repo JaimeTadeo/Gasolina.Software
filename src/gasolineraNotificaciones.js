@@ -1,4 +1,3 @@
-// Almacén de surtidores favoritos por cliente
 let surtidoresFavoritos = new Map();
 
 export function gestionarSurtidoresFavoritos(clienteId, surtidorId, accion) {
