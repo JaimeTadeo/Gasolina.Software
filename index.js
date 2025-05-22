@@ -11,6 +11,7 @@
     } from "./src/gasolineraAdmin.js";
     import { reportarSurtidorSinGasolina } from './src/reportarSurtidor.js';
     import { filtrarSurtidoresPorZona } from './src/gasolineraZona.js';
+    import {  gestionarSurtidoresFavoritos, notificarDisponibilidad } from './src/gasolineraNotificaciones.js';
     const botonMostrarDisponibilidad = document.getElementById("mostrarDisponibilidad");
     const resultadoDiv = document.getElementById("resultado");
     const botonAgregarGasolina = document.getElementById("agregarGasolina");
@@ -488,31 +489,39 @@ function actualizarListaTicketsAdmin() {
     });
 
 
-    botonMarcarFavorito.addEventListener("click", () => {
-        const clienteId = "cliente_1";
-        const surtidorId = parseInt(inputSurtidorFavoritoId.value);
+   botonMarcarFavorito.addEventListener("click", () => {
+    const clienteId = "cliente_1"; // Puedes hacer esto dinámico si tienes login
+    const surtidorId = parseInt(inputSurtidorFavoritoId.value);
 
-        if (isNaN(surtidorId) || (!surtidores[surtidorId])) {
-            notificacionesFavoritosDiv.textContent = "✗ Por favor, ingresa un ID de surtidor válido (1 o 2).";
-            notificacionesFavoritosDiv.style.color = "red";
-            return;
-        }
+    if (isNaN(surtidorId) || (!surtidores[surtidorId])) {
+        notificacionesFavoritosDiv.textContent = "✗ Ingresa un ID válido (1 o 2)";
+        notificacionesFavoritosDiv.style.color = "red";
+        return;
+    }
 
-        console.log(`Funcionalidad de favoritos (marcar) - Cliente ${clienteId}, Surtidor ${surtidorId}`);
-        const favoritosPlaceHolderDiv = document.getElementById("notificaciones");
-        favoritosPlaceHolderDiv.innerHTML = `<p style="color: orange;">Funcionalidad de favoritos no implementada en este ejemplo. Surtidor ${surtidorId} marcado.</p>`;
+    gestionarSurtidoresFavoritos(clienteId, surtidorId, 'agregar');
+    notificacionesFavoritosDiv.innerHTML = `
+        <p style="color: green;">✓ Surtidor ${surtidorId} marcado como favorito</p>
+    `;
 
+    // Verificar disponibilidad inmediatamente
+    notificarDisponibilidad(surtidores, clienteId, (mensaje) => {
+        displaySystemNotification(mensaje, mensaje.includes("✅") ? 'success' : 'warning');
     });
+});
 
-    botonVerificarFavoritos.addEventListener("click", () => {
-        const clienteId = "cliente_1";
+  botonVerificarFavoritos.addEventListener("click", () => {
+    const clienteId = "cliente_1";
+    notificarDisponibilidad(surtidores, clienteId, (mensaje) => {
+        const p = document.createElement("p");
+        p.textContent = mensaje;
+        notificacionesFavoritosDiv.innerHTML = '';
+        notificacionesFavoritosDiv.appendChild(p);
 
-
-        console.log(`Funcionalidad de favoritos (verificar) - Cliente ${clienteId}`);
-        const favoritosPlaceHolderDiv = document.getElementById("notificaciones");
-        favoritosPlaceHolderDiv.innerHTML = `<p style="color: orange;">Funcionalidad de verificar favoritos no implementada.</p>`;
-
+        // Mostrar también en notificaciones del sistema
+        displaySystemNotification(mensaje, mensaje.includes("✅") ? 'success' : 'warning');
     });
+});
 
 let filaDeTickets = 0;
 const minutosPorPersona = 3;
@@ -554,6 +563,7 @@ const LISTA_DE_TODOS_LOS_SURTIDORES = [
 
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Código existente de búsqueda de surtidores
     const inputNombreSurtidor = document.getElementById('nombreSurtidorInput');
     const botonBuscar = document.getElementById('buscarSurtidorBtn');
     const divResultado = document.getElementById('resultadoBusquedaSurtidor');
@@ -564,7 +574,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const surtidorEncontrado = buscarSurtidorPorNombre(LISTA_DE_TODOS_LOS_SURTIDORES, nombreABuscar);
 
             if (surtidorEncontrado) {
-
                 divResultado.innerHTML = `
                     <h3>Surtidor Encontrado:</h3>
                     <p><strong>ID:</strong> ${surtidorEncontrado.id}</p>
@@ -579,6 +588,7 @@ document.addEventListener('DOMContentLoaded', () => {
         console.warn("Alguno de los elementos (input, botón o div de resultado) para la búsqueda de surtidor no se encontró en el DOM.");
     }
 
+    // Código existente de disponibilidad
     const elementoParaMostrarDisponibilidad = document.getElementById('disponibilidadGasolina'); 
     if (elementoParaMostrarDisponibilidad && typeof gasolinera === 'function') { 
         const infoSurtidores = gasolinera(true, LISTA_DE_TODOS_LOS_SURTIDORES);
@@ -593,5 +603,28 @@ document.addEventListener('DOMContentLoaded', () => {
              elementoParaMostrarDisponibilidad.textContent = infoSurtidores;
         }
     }
+
+    // ===== AÑADE ESTO AL FINAL =====
+    // Verificación automática de favoritos cada 5 minutos (300,000 ms)
+    const verificarFavoritos = () => {
+        const clienteId = "cliente_1"; // O usa tu sistema de autenticación
+        notificarDisponibilidad(surtidores, clienteId, (mensaje) => {
+            if (!document.hidden) {
+                displaySystemNotification(mensaje, mensaje.includes("✅") ? 'success' : 'warning');
+
+                // Opcional: Mostrar en la interfaz
+                const notifDiv = document.getElementById('notificacionesFavoritos');
+                if (notifDiv) {
+                    const notificacion = document.createElement('p');
+                    notificacion.textContent = `[${new Date().toLocaleTimeString()}] ${mensaje}`;
+                    notifDiv.prepend(notificacion);
+                }
+            }
+        });
+    };
+
+    // Ejecutar inmediatamente y luego cada 5 minutos
+    verificarFavoritos();
+    setInterval(verificarFavoritos, 300000);
 });
 

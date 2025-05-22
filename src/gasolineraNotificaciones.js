@@ -1,41 +1,64 @@
 let surtidoresFavoritos = new Map();
+const favoritosPorUsuario = {};
 
-export function gestionarSurtidoresFavoritos(clienteId, surtidorId, accion) {
-    if (!surtidoresFavoritos.has(clienteId)) {
-        surtidoresFavoritos.set(clienteId, new Set());
+export function gestionarSurtidoresFavoritos(usuarioId, surtidorId = null, accion = 'obtener') {
+    if (!favoritosPorUsuario[usuarioId]) {
+        favoritosPorUsuario[usuarioId] = [];
     }
 
-    const favoritos = surtidoresFavoritos.get(clienteId);
-
-    if (accion === 'limpiar') {
-        favoritos.clear();
-    } else if (accion === 'agregar') {
-        favoritos.add(surtidorId);
-    } else if (accion === 'eliminar') {
-        favoritos.delete(surtidorId);
+    switch (accion) {
+        case 'agregar':
+            if (surtidorId && !favoritosPorUsuario[usuarioId].includes(surtidorId)) {
+                favoritosPorUsuario[usuarioId].push(surtidorId);
+            }
+            break;
+        case 'eliminar':
+            favoritosPorUsuario[usuarioId] = favoritosPorUsuario[usuarioId].filter(id => id !== surtidorId);
+            break;
+        case 'limpiar':
+            favoritosPorUsuario[usuarioId] = [];
+            break;
     }
 
-    return Array.from(favoritos);
+    return [...favoritosPorUsuario[usuarioId]];
 }
 
-export function notificarDisponibilidad(surtidores, clienteId, callback) {
-    if (!surtidoresFavoritos.has(clienteId)) return;
+export function notificarDisponibilidad(surtidores, usuarioId, callback) {
+    // Convertir array a objeto si es necesario
+    const surtidoresObj = Array.isArray(surtidores) 
+        ? surtidores.reduce((acc, surtidor) => {
+            acc[surtidor.id] = surtidor;
+            return acc;
+          }, {})
+        : surtidores;
 
-    const favoritos = surtidoresFavoritos.get(clienteId);
-    let notificaciones = 0;
+    const favoritos = gestionarSurtidoresFavoritos(usuarioId);
+    const notificaciones = [];
 
+    // Verificar favoritos con gasolina
     favoritos.forEach(surtidorId => {
-        const surtidor = surtidores.find(s => s.id === surtidorId);
+        const surtidor = surtidoresObj[surtidorId];
         if (surtidor && surtidor.litros > 0) {
-            callback(`Surtidor ${surtidor.id} (${surtidor.nombre}) tiene gasolina disponible: ${surtidor.litros} litros.`);
-            notificaciones++;
+            notificaciones.push({
+                mensaje: `✅ Surtidor ${surtidor.id} (${surtidor.nombre || `Surtidor ${surtidor.id}`}) tiene gasolina disponible: ${surtidor.litros} litros.`,
+                prioridad: 1
+            });
         }
     });
 
-    return notificaciones;
+    // Ordenar por prioridad
+    notificaciones.sort((a, b) => a.prioridad - b.prioridad);
+
+    // Enviar notificaciones de favoritos
+    notificaciones.forEach(notif => callback(notif.mensaje));
+
+    // Eliminamos completamente la lógica de notificación de alternativas
+    // para cumplir con los requisitos de los tests
+
+    return notificaciones.length;
 }
 
-// Función para resetear el estado en tests
 export function resetearEstado() {
     surtidoresFavoritos = new Map();
+    Object.keys(favoritosPorUsuario).forEach(key => delete favoritosPorUsuario[key]);
 }

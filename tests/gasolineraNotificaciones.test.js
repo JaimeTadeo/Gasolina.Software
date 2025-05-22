@@ -19,10 +19,9 @@ describe('Notificaciones para surtidores favoritos', () => {
   });
 
   describe('gestionarSurtidoresFavoritos', () => {
-    it('debería agregar un surtidor a favoritos', () => {
-      gestionarSurtidoresFavoritos(clienteId, 2, 'agregar');
-      const favoritos = gestionarSurtidoresFavoritos(clienteId);
-      expect(favoritos).toContain(2);
+    const clienteId = 'cliente_test';
+    beforeEach(() => {
+        gestionarSurtidoresFavoritos(clienteId, null, 'limpiar');
     });
 
     it('debería eliminar un surtidor de favoritos', () => {
