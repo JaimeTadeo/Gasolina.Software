@@ -1,4 +1,4 @@
-import { generarTicket, resetContador, usarTicket, cambiarEstadoTicket, obtenerEstadoTicket,calcularTiempoEstimado } from '../src/ticket.js';
+import { generarTicket, resetContador, usarTicket, cambiarEstadoTicket, obtenerEstadoTicket,calcularTiempoEstimado,obtenerHistorialTickets,agregarTicketAlHistorial,obtenerTicketsArchivados } from '../src/ticket.js';
 
 describe('Uso de Tickets', () => {
   beforeEach(() => {
@@ -62,4 +62,55 @@ describe('Calcular tiempo estimado', () => {
     expect(estimadoT3.tiempo).toBe(4); // 2 tickets antes (1 y 2), 2 min c/u
     expect(estimadoT3.mensaje).toBe("Tu tiempo estimado de atención es 4 minutos");
   });
+});
+
+describe('Historial de Tickets', () => {
+  beforeEach(() => {
+    resetContador(); // Ahora sí limpia completamente
+  });
+
+  it('debe devolver un array vacío si no hay tickets', () => {
+    const historial = obtenerHistorialTickets();
+    expect(historial).toEqual([]);
+  });
+
+  it('debe registrar tickets nuevos en el historial', () => {
+    const ticketId = generarTicket();
+    const historial = obtenerHistorialTickets();
+    expect(historial.length).toBe(1);
+    expect(historial[0].id).toBe(ticketId);
+  });
+
+it('debe filtrar tickets por rango de fechas', () => {
+  const hoy = new Date();
+  const ticketHoy = generarTicket(); // ← Ticket reciente
+  // Simulamos un ticket de "ayer" usando la nueva función
+  const ayer = new Date();
+  ayer.setDate(hoy.getDate() - 1);
+  agregarTicketAlHistorial({
+    id: 99,
+    fecha: ayer,
+    usado: false,
+    estado: 'pendiente'
+  });
+
+  const historialReciente = obtenerHistorialTickets(hoy.toISOString());
+  expect(historialReciente.length).toBe(1);
+  expect(historialReciente[0].id).toBe(ticketHoy);
+});
+
+describe('Archivado de Tickets', () => {
+  beforeEach(() => {
+    resetContador();
+  });
+
+  it('debe mover tickets usados a archivados', () => {
+    const ticketId = generarTicket();
+    usarTicket(ticketId);
+    const archivados = obtenerTicketsArchivados();
+    expect(archivados.length).toBe(1);
+    expect(archivados[0].id).toBe(ticketId);
+    expect(archivados[0].usado).toBe(true);
+  });
+});
 });

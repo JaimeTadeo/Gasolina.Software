@@ -572,4 +572,73 @@ function actualizarTiempoEstimado() {
     const tiempo = filaDeTickets * minutosPorPersona;
     divTiempoEstimado.textContent = `Tiempo estimado: ${tiempo} minutos`;
 }
- 
+
+/*-------------------------------------------------------Buscar surtidor------------------------------------------------------------------*/
+
+// index.js
+
+// Importa la función que creamos (sin cambios aquí)
+import { buscarSurtidorPorNombre } from './src/buscarSurtidor.js'; // Ajusta la ruta si es necesario
+
+// Definimos la lista de surtidores con la estructura que necesitas: id, nombre, litros.
+// Estos son los 2 surtidores "por defecto" que mencionaste.
+const LISTA_DE_TODOS_LOS_SURTIDORES = [
+    { id: 1, nombre: 'Surtidor Principal Centro', litros: 750 },
+    { id: 2, nombre: 'Surtidor Avenida Veloz', litros: 400 }
+    // Puedes agregar más surtidores aquí si lo necesitas, manteniendo la misma estructura.
+];
+
+// --- Código existente de tu index.js ---
+// ... (todo tu código actual de gasolinera, admin, notificaciones, tickets, etc.)
+// ... recuerda importar las otras funciones que usas de tus otros módulos aquí también.
+// --- Lógica para buscar surtidor (actualizada para mostrar menos campos) ---
+document.addEventListener('DOMContentLoaded', () => {
+    const inputNombreSurtidor = document.getElementById('nombreSurtidorInput');
+    const botonBuscar = document.getElementById('buscarSurtidorBtn');
+    const divResultado = document.getElementById('resultadoBusquedaSurtidor');
+
+    if (botonBuscar && inputNombreSurtidor && divResultado) {
+        botonBuscar.addEventListener('click', () => {
+            const nombreABuscar = inputNombreSurtidor.value;
+            const surtidorEncontrado = buscarSurtidorPorNombre(LISTA_DE_TODOS_LOS_SURTIDORES, nombreABuscar);
+
+            if (surtidorEncontrado) {
+                // HTML actualizado para mostrar solo id, nombre y litros
+                divResultado.innerHTML = `
+                    <h3>Surtidor Encontrado:</h3>
+                    <p><strong>ID:</strong> ${surtidorEncontrado.id}</p>
+                    <p><strong>Nombre:</strong> ${surtidorEncontrado.nombre}</p>
+                    <p><strong>Litros disponibles:</strong> ${surtidorEncontrado.litros}</p>
+                `;
+            } else {
+                divResultado.innerHTML = `<p>No se encontró ningún surtidor con el nombre "${nombreABuscar}".</p>`;
+            }
+        });
+    } else {
+        console.warn("Alguno de los elementos (input, botón o div de resultado) para la búsqueda de surtidor no se encontró en el DOM.");
+    }
+
+    // Aquí puedes seguir inicializando otras funcionalidades de tu página
+    // por ejemplo, podrías querer mostrar esta lista de surtidores inicial usando tu función gasolinera:
+    // Ejemplo de cómo podrías usar tu función `gasolinera` con esta lista:
+    const elementoParaMostrarDisponibilidad = document.getElementById('disponibilidadGasolina'); // Asegúrate de tener este elemento en tu HTML
+    if (elementoParaMostrarDisponibilidad && typeof gasolinera === 'function') { // Verifica que gasolinera esté definida
+        // Para mostrar la información detallada de cada surtidor
+        const infoSurtidores = gasolinera(true, LISTA_DE_TODOS_LOS_SURTIDORES);
+        if (Array.isArray(infoSurtidores)) {
+            elementoParaMostrarDisponibilidad.innerHTML = '<h3>Disponibilidad Actual:</h3>';
+            infoSurtidores.forEach(info => {
+                const p = document.createElement('p');
+                p.textContent = info;
+                elementoParaMostrarDisponibilidad.appendChild(p);
+            });
+        } else {
+             elementoParaMostrarDisponibilidad.textContent = infoSurtidores;
+        }
+    }
+});
+
+// --- Fin de la lógica de búsqueda ---
+
+// No olvides importar tu función 'gasolinera' si la usas como en el ejemplo de arriba
+// import gasolinera from './src/gasolinera.js';

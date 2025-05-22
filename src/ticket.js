@@ -1,20 +1,37 @@
 let contador = 0;
 const tickets = {};
+let ticketsHistory = []; // Cambiado a let para permitir reasignación
+let archivedTickets = [];
 
 export function generarTicket() {
   const id = ++contador;
-  tickets[id] = { usado: false, estado: 'pendiente' };
+  const ticketData = {
+    id,
+    usado: false,
+    estado: 'pendiente',
+    fecha: new Date()
+  };
+  tickets[id] = ticketData;
+  ticketsHistory.push({...ticketData}); // Usar spread para evitar referencias
   return id;
 }
 
 export function usarTicket(id) {
   if (!tickets[id] || tickets[id].usado) return false;
   tickets[id].usado = true;
+  // Archivar el ticket cuando se usa
+  archivedTickets.push({
+    ...tickets[id],
+    archivadoEl: new Date()
+  });
   return true;
 }
 
 export function resetContador() {
   contador = 0;
+  // Limpiar arrays sin reasignar (manteniendo la referencia)
+  ticketsHistory.length = 0;
+  archivedTickets.length = 0;
   for (const id in tickets) {
     delete tickets[id];
   }
@@ -49,3 +66,24 @@ export function calcularTiempoEstimado(id) {
     mensaje: `Tu tiempo estimado de atención es ${tiempoEstimado} minutos`
   };
 }
+
+export function obtenerHistorialTickets(fechaInicio = null, fechaFin = null) {
+  if (!fechaInicio && !fechaFin) return [...ticketsHistory]; // ← Sin filtros
+
+  return ticketsHistory.filter(ticket => {
+    const ticketDate = new Date(ticket.fecha);
+    return (
+      (!fechaInicio || ticketDate >= new Date(fechaInicio)) &&
+      (!fechaFin || ticketDate <= new Date(fechaFin))
+    );
+  });
+}
+
+export function agregarTicketAlHistorial(ticket) {
+  ticketsHistory.push(ticket);
+}
+
+export function obtenerTicketsArchivados() {
+  return [...archivedTickets]; // Devuelve copia del array
+}
+
