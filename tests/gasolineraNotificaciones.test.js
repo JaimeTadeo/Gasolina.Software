@@ -1,7 +1,8 @@
 import { 
   gestionarSurtidoresFavoritos, 
   notificarDisponibilidad,
-  resetearEstado
+  resetearEstado,
+  notificarArriboCamion
 } from '../src/gasolineraNotificaciones.js';
 
 describe('Notificaciones para surtidores favoritos', () => {
@@ -65,4 +66,38 @@ describe('Notificaciones para surtidores favoritos', () => {
       expect(callback).toHaveBeenCalledTimes(2);
     });
   });
+
+
 });
+
+describe('notificarArriboCamion', () => {
+    let surtidores;
+    let camion;
+    let callback;
+
+    beforeEach(() => {
+        surtidores = [
+            { id: 1, litros: 100, nombre: 'Surtidor 1' },
+            { id: 2, litros: 200, nombre: 'Surtidor 2' }
+        ];
+        camion = { surtidorId: 1, litrosDescargados: 50 };
+        callback = jest.fn();
+    });
+
+    it('debería actualizar el combustible del surtidor y notificar el arribo', () => {
+        notificarArriboCamion(surtidores, camion, callback);
+        expect(surtidores[0].litros).toBe(150); // Combustible actualizado
+        expect(callback).toHaveBeenCalledWith(
+            expect.stringContaining('🚛 Camión arribó al Surtidor 1')
+        );
+    });
+
+    it('debería notificar error si el surtidor no existe', () => {
+        camion.surtidorId = 99;
+        notificarArriboCamion(surtidores, camion, callback);
+        expect(callback).toHaveBeenCalledWith(
+            expect.stringContaining('Error: No se encontró el surtidor con ID 99')
+        );
+    });
+});
+

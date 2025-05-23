@@ -71,3 +71,13 @@ export function resetearEstado() {
     surtidoresFavoritos = new Map();
     Object.keys(favoritosPorUsuario).forEach(key => delete favoritosPorUsuario[key]);
 }
+
+export function notificarArriboCamion(surtidores, camion, callback) {
+    const surtidor = surtidores.find(s => s.id === camion.surtidorId);
+    if (!surtidor) {
+        callback(`Error: No se encontró el surtidor con ID ${camion.surtidorId}.`);
+        return;
+    }
+    surtidor.litros += camion.litrosDescargados;
+    callback(`🚛 Camión arribó al Surtidor ${surtidor.id}. Combustible actualizado: ${surtidor.litros} litros.`);
+}
