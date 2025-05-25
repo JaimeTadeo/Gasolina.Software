@@ -17,15 +17,15 @@
             <hr>
 
             <h3>Gestión de Gasolina</h3>
-            <label for="surtidorSeleccionado">Selecciona surtidor:</label>
-            <select id="surtidorSeleccionado">
-                <option value="1">Surtidor 1</option>
-                <option value="2">Surtidor 2</option>
+            <label for="surtidorSeleccionadoAgregar">Selecciona surtidor:</label>
+            <select id="surtidorSeleccionadoAgregar">
+            <option value="1">Surtidor 1</option>
+            <option value="2">Surtidor 2</option>
             </select>
             <label for="cantidadLitros">Litros a agregar:</label>
-            <input type="number" id="cantidadLitros" />
+            <input type="number" id="cantidadLitros" min="1" step="1" required>
             <button id="agregarGasolina">Agregar Gasolina</button>
-            <div id="error"></div>
+            <div id="error" class="mensaje-error"></div>
 
             <hr>
 
@@ -46,7 +46,7 @@
 
             <h3>Informar Estado de la Fila</h3>
             <label for="surtidorSeleccionado">Selecciona surtidor:</label>
-            <select id="surtidorSeleccionado">
+            <select id="surtidorSeleccionadoFila">
                 <option value="1">Surtidor 1</option>
                 <option value="2">Surtidor 2</option>
             </select>
@@ -145,7 +145,7 @@
 
             <h3>Mis Surtidores Favoritos</h3>
             <label for="surtidorSeleccionado">Selecciona surtidor:</label>
-            <select id="surtidorSeleccionado">
+            <select id="surtidorSeleccionadoFavorito">
                 <option value="1">Surtidor 1</option>
                 <option value="2">Surtidor 2</option>
             </select>

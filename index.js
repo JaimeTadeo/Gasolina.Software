@@ -16,8 +16,8 @@
     const botonMostrarDisponibilidad = document.getElementById("mostrarDisponibilidad");
     const resultadoDiv = document.getElementById("resultado");
     const botonAgregarGasolina = document.getElementById("agregarGasolina");
-    const inputSurtidorIdAdmin = document.getElementById("surtidorId");
-    const inputCantidadLitros = document.getElementById("cantidadLitros");
+   const inputSurtidorIdAdmin = document.getElementById("surtidorSeleccionadoAgregar");
+   const inputCantidadLitros = document.getElementById("cantidadLitros");
     const errorAgregarGasolinaDiv = document.getElementById("error");
     const botonModificarHorario = document.getElementById("modificarHorario");
     const errorModificarHorarioDiv = document.getElementById("errorHorario");
@@ -89,7 +89,7 @@ const inputLitrosDescargados = document.getElementById("litrosDescargados");
         systemNotificationsDiv.removeChild(systemNotificationsDiv.lastChild);
     }
 }
-  function renderizarSurtidores(filteredSurtidores = null) {
+ function renderizarSurtidores(filteredSurtidores = null) {
     const dataToRender = filteredSurtidores || Object.values(surtidores);
     const mensajes = gasolinera(true, dataToRender);
     
@@ -103,6 +103,11 @@ const inputLitrosDescargados = document.getElementById("litrosDescargados");
 
     mensajes.forEach(mensaje => {
         const p = document.createElement("p");
+        // Resaltar surtidores sin gasolina
+        if (mensaje.includes("0 litros")) {
+            p.style.color = "#ff0000";
+            p.style.fontWeight = "bold";
+        }
         p.textContent = mensaje;
         targetDiv.appendChild(p);
     });
@@ -271,25 +276,37 @@ const inputLitrosDescargados = document.getElementById("litrosDescargados");
         actualizarReportesFilasUsuarioView();
     });
 
+
+    if (!inputSurtidorIdAdmin || !inputCantidadLitros || !botonAgregarGasolina || !errorAgregarGasolinaDiv) {
+    console.error("Error: Elementos no encontrados");
+    displaySystemNotification("Error en la configuración del sistema", "error");
+} else {
     botonAgregarGasolina.addEventListener("click", () => {
-        const id = parseInt(inputSurtidorIdAdmin.value, 10);
-        const cantidad = parseFloat(inputCantidadLitros.value);
-
-        errorAgregarGasolinaDiv.textContent = "";
-
         try {
-            agregarGasolina(surtidores, id, cantidad);
+            const id = parseInt(inputSurtidorIdAdmin.value);
+            const litros = parseFloat(inputCantidadLitros.value);
+
+            if (isNaN(id) || isNaN(litros)) {
+                throw new Error("Por favor ingresa valores válidos");
+            }
+
+            const resultado = agregarGasolina(surtidores, id, litros);
+            // Mostrar mensaje de éxito
+            errorAgregarGasolinaDiv.style.color = "green";
+            errorAgregarGasolinaDiv.textContent = `✅ ${resultado.message}`;
+            // Actualizar la interfaz
             renderizarSurtidores();
-            inputSurtidorIdAdmin.value = "";
+            actualizarAlertaSurtidoresUsuario();
+            // Limpiar el campo de litros
             inputCantidadLitros.value = "";
-            errorAgregarGasolinaDiv.style.color = "black";
-            errorAgregarGasolinaDiv.textContent = `Gasolina agregada exitosamente a Surtidor ${id}.`;
 
         } catch (error) {
-            errorAgregarGasolinaDiv.textContent = error.message;
             errorAgregarGasolinaDiv.style.color = "red";
+            errorAgregarGasolinaDiv.textContent = `❌ ${error.message}`;
+            displaySystemNotification(`Error: ${error.message}`, "error");
         }
     });
+}
 
   botonNotificarCamion.addEventListener("click", () => {
     const surtidorId = parseInt(inputSurtidorCamion.value);
