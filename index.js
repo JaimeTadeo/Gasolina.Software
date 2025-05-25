@@ -9,19 +9,19 @@
         obtenerReporteFilas,
         notificarAdministrador
     } from "./src/gasolineraAdmin.js";
-    import { reportarSurtidorSinGasolina,verificarDisponibilidadAlternativa  } from './src/reportarSurtidor.js';
-    import { filtrarSurtidoresPorZona } from './src/gasolineraZona.js';
-   import { gestionarSurtidoresFavoritos, notificarDisponibilidad, notificarArriboCamion } from './src/gasolineraNotificaciones.js';
-    import { actualizarCombustible } from './src/gasolinera.js';
+    import { reportarSurtidorSinGasolina } from './src/reportarSurtidor.js';
+    import { buscarSurtidorPorNombre } from './src/buscarSurtidor.js';
+
+    // import { gestionarSurtidoresFavoritos, notificarDisponibilidad } from './src/gasolineraNotificaciones.js';
     const botonMostrarDisponibilidad = document.getElementById("mostrarDisponibilidad");
     const resultadoDiv = document.getElementById("resultado");
     const botonAgregarGasolina = document.getElementById("agregarGasolina");
-   const inputSurtidorIdAdmin = document.getElementById("surtidorSeleccionadoAgregar");
-   const inputCantidadLitros = document.getElementById("cantidadLitros");
+    const inputSurtidorIdAdmin = document.getElementById("surtidorId");
+    const inputCantidadLitros = document.getElementById("cantidadLitros");
     const errorAgregarGasolinaDiv = document.getElementById("error");
     const botonModificarHorario = document.getElementById("modificarHorario");
     const errorModificarHorarioDiv = document.getElementById("errorHorario");
-  const botonNotificarCamion = document.getElementById("notificarCamion");
+    const botonNotificarCamion = document.getElementById("notificarCamion");
     const inputPersonasEnFila = document.getElementById("numeroPersonas");
     const botonInformarFila = document.getElementById("informarFila");
     const mensajeConfirmacionFilaAdminDiv = document.getElementById("mensajeFila");
@@ -39,11 +39,11 @@
     const botonMarcarFavorito = document.getElementById("marcarFavorito");
     const botonVerificarFavoritos = document.getElementById("verificarFavoritos");
     const notificacionesFavoritosDiv = document.getElementById("notificaciones")
-    const selectZona = document.getElementById("zonaSeleccionada");
-    const botonFiltrarPorZona = document.getElementById("filtrarPorZona");
-    const resultadoFiltroZonaDiv = document.getElementById("resultadoFiltroZona");
-   const inputSurtidorCamion = document.getElementById("surtidorCamionId");
-const inputLitrosDescargados = document.getElementById("litrosDescargados");
+
+    
+    // Cuando reportes un surtidor sin gasolina:
+    //const resultado = verificarDisponibilidadAlternativa(idSurtidorReportado);
+   // displaySystemNotification(resultado.mensaje, resultado.alternativoDisponible ? 'info' : 'warning');
 
     let isAvailabilityShown = false;
 
@@ -615,14 +615,8 @@ function actualizarTiempoEstimado() {
     divTiempoEstimado.textContent = `Tiempo estimado: ${tiempo} minutos`;
 }
 
-
-import { buscarSurtidorPorNombre } from './src/buscarSurtidor.js'; 
-
-const LISTA_DE_TODOS_LOS_SURTIDORES = [
-    { id: 1, nombre: 'Surtidor Principal Centro', litros: 750 },
-    { id: 2, nombre: 'Surtidor Avenida Veloz', litros: 400 }
-];
-
+/*-------------------------------------------------------Buscar surtidor------------------------------------------------------------------*/
+import { buscarSurtidorPorNombre } from './src/buscarSurtidor.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     // Código existente de búsqueda de surtidores
@@ -630,10 +624,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const botonBuscar = document.getElementById('buscarSurtidorBtn');
     const divResultado = document.getElementById('resultadoBusquedaSurtidor');
 
+    // Usamos los surtidores reales definidos arriba como objeto
+    const surtidoresArray = Object.values(surtidores); // Convertimos a array
+
     if (botonBuscar && inputNombreSurtidor && divResultado) {
         botonBuscar.addEventListener('click', () => {
             const nombreABuscar = inputNombreSurtidor.value;
-            const surtidorEncontrado = buscarSurtidorPorNombre(LISTA_DE_TODOS_LOS_SURTIDORES, nombreABuscar);
+            const surtidorEncontrado = buscarSurtidorPorNombre(surtidoresArray, nombreABuscar);
 
             if (surtidorEncontrado) {
                 divResultado.innerHTML = `
@@ -646,46 +643,5 @@ document.addEventListener('DOMContentLoaded', () => {
                 divResultado.innerHTML = `<p>No se encontró ningún surtidor con el nombre "${nombreABuscar}".</p>`;
             }
         });
-    } else {
-        console.warn("Alguno de los elementos (input, botón o div de resultado) para la búsqueda de surtidor no se encontró en el DOM.");
     }
-
-    // Código existente de disponibilidad
-    const elementoParaMostrarDisponibilidad = document.getElementById('disponibilidadGasolina'); 
-    if (elementoParaMostrarDisponibilidad && typeof gasolinera === 'function') { 
-        const infoSurtidores = gasolinera(true, LISTA_DE_TODOS_LOS_SURTIDORES);
-        if (Array.isArray(infoSurtidores)) {
-            elementoParaMostrarDisponibilidad.innerHTML = '<h3>Disponibilidad Actual:</h3>';
-            infoSurtidores.forEach(info => {
-                const p = document.createElement('p');
-                p.textContent = info;
-                elementoParaMostrarDisponibilidad.appendChild(p);
-            });
-        } else {
-             elementoParaMostrarDisponibilidad.textContent = infoSurtidores;
-        }
-    }
-
-
-    const verificarFavoritos = () => {
-        const clienteId = "cliente_1"; 
-        notificarDisponibilidad(surtidores, clienteId, (mensaje) => {
-            if (!document.hidden) {
-                displaySystemNotification(mensaje, mensaje.includes("✅") ? 'success' : 'warning');
-
-                // Opcional: Mostrar en la interfaz
-                const notifDiv = document.getElementById('notificacionesFavoritos');
-                if (notifDiv) {
-                    const notificacion = document.createElement('p');
-                    notificacion.textContent = `[${new Date().toLocaleTimeString()}] ${mensaje}`;
-                    notifDiv.prepend(notificacion);
-                }
-            }
-        });
-    };
-
-    // Ejecutar inmediatamente y luego cada 5 minutos
-    verificarFavoritos();
-    setInterval(verificarFavoritos, 300000);
 });
-
