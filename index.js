@@ -374,23 +374,24 @@ const inputLitrosDescargados = document.getElementById("litrosDescargados");
 
   document.querySelectorAll('.btn-reportar').forEach(boton => {
     boton.addEventListener('click', () => {
-        const idSurtidor = boton.id.split('-')[2];
-        
+        const idSurtidor = parseInt(boton.dataset.surtidorId || boton.id.split('-')[2]);
         try {
-            // 1. Reportar el surtidor (esto ya establece litros=0)
+            // 1. Reportar el surtidor (esto establece litros=0)
             reportarSurtidorSinGasolina(surtidores, idSurtidor);
-            
             // 2. Mostrar notificación
             displaySystemNotification(`Surtidor ${idSurtidor} reportado sin gasolina.`, 'warning');
-            
             // 3. Notificar al administrador
             notificarAdministrador(`Admin reportó Surtidor ${idSurtidor} sin gasolina.`);
-            
-            // 4. Actualizar la vista de disponibilidad
+            // 4. Verificar y mostrar alternativas
+            const alternativa = verificarDisponibilidadAlternativa(surtidores, idSurtidor);
+            if (alternativa.alternativoDisponible) {
+                displaySystemNotification(alternativa.mensaje, 'info');
+            }
+            // 5. Actualizar la vista de disponibilidad
             renderizarSurtidores();
-            
+            actualizarAlertaSurtidoresUsuario();
         } catch (error) {
-            displaySystemNotification(`Error: ${error.message}`, 'warning');
+            displaySystemNotification(`Error: ${error.message}`, 'error');
         }
     });
 });
