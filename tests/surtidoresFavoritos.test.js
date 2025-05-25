@@ -10,4 +10,8 @@ describe('Gestión de Surtidores Favoritos', () => {
     const resultado = gestionarSurtidoresFavoritos('usuario1', 2);
     expect(resultado).toBe('Surtidor 2 agregado a favoritos');
     });
+    test('debería lanzar error para surtidor inválido', () => {
+    expect(() => gestionarSurtidoresFavoritos('usuario1', 3))
+        .toThrow('ID de surtidor no válido');
+    });
 });

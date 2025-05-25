@@ -1,6 +1,9 @@
 const favoritosPorUsuario = {};
 
 export function gestionarSurtidoresFavoritos(usuarioId, surtidorId) {
+    if (![1, 2].includes(surtidorId)) {
+        throw new Error('ID de surtidor no válido');
+    }
     if (!favoritosPorUsuario[usuarioId]) {
         favoritosPorUsuario[usuarioId] = [];
     }
