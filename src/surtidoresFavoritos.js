@@ -13,3 +13,24 @@ export function gestionarSurtidoresFavoritos(usuarioId, surtidorId) {
     }
     return `El surtidor ${surtidorId} ya está en tus favoritos`;
 }
+
+export function verificarDisponibilidadFavoritos(surtidores, usuarioId) {
+    if (!favoritosPorUsuario[usuarioId]) {
+        return {
+            disponible: false,
+            mensaje: 'No tienes surtidores favoritos'
+        };
+    }
+
+    const disponibles = favoritosPorUsuario[usuarioId].filter(id => 
+        surtidores[id]?.litros > 0
+    );
+
+    return {
+        disponible: disponibles.length > 0,
+        surtidores: disponibles,
+        mensaje: disponibles.length > 0 
+            ? `Surtidores disponibles: ${disponibles.join(', ')}` 
+            : 'No hay surtidores favoritos disponibles'
+    };
+}
