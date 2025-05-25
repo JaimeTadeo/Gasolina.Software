@@ -1,41 +1,21 @@
 let reportesSurtidores = [];
 
-export function reportarSurtidorSinGasolina(surtidores, idSurtidor) {
-  // Validación del ID
-  if (typeof idSurtidor !== 'number' || isNaN(idSurtidor)) {
-    throw new Error('ID de surtidor no válido');
-  }
-
-  // Verificar existencia del surtidor
-  if (!surtidores[idSurtidor]) {
-    throw new Error(`Surtidor con ID ${idSurtidor} no existe`);
-  }
-
-  // Registrar el reporte si no existe
+export function reportarSurtidorSinGasolina(idSurtidor) {
   if (!reportesSurtidores.includes(idSurtidor)) {
     reportesSurtidores.push(idSurtidor);
-    // Actualizar el estado real del surtidor
-    surtidores[idSurtidor].litros = 0;
     console.log(`[Reporte] Surtidor ${idSurtidor} marcado sin gasolina`);
   }
-
-  return {
-    success: true,
-    message: `Surtidor ${idSurtidor} reportado sin gasolina`,
-    surtidorId: idSurtidor
-  };
 }
-
 
 export function obtenerReportesDeSurtidores() {
   return [...reportesSurtidores];
 }
 
-export function verificarDisponibilidadAlternativa(surtidores, idSurtidorReportado) {
-  const todosSurtidores = Object.keys(surtidores).map(Number);
+export function verificarDisponibilidadAlternativa(idSurtidorReportado) {
+  const todosSurtidores = [1, 2];
   
   const disponibles = todosSurtidores.filter(
-    id => id !== idSurtidorReportado && surtidores[id].litros > 0
+    id => id !== idSurtidorReportado && !reportesSurtidores.includes(id)
   );
 
   if (disponibles.length > 0) {
@@ -56,3 +36,4 @@ export function verificarDisponibilidadAlternativa(surtidores, idSurtidorReporta
 export function _limpiarReportes() {
   reportesSurtidores = [];
 }
+

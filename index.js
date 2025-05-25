@@ -1,4 +1,4 @@
-    import gasolinera from "./src/gasolinera.js";
+        import gasolinera from "./src/gasolinera.js";
     import { generarTicket, usarTicket } from "./src/ticket.js";
     import { calificarSurtidor, obtenerCalificaciones, obtenerSurtidorMasLleno } from "./src/gasolineraAdmin.js";
     import {

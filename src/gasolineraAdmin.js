@@ -1,24 +1,30 @@
 import { reportarSurtidorSinGasolina } from './reportarSurtidor.js';
 
-export function agregarGasolina(surtidores, idSurtidor, litros) {
-    // Validaciones básicas
-    if (!surtidores[idSurtidor]) {
-        throw new Error(`Surtidor con ID ${idSurtidor} no existe`);
-    }
-    if (isNaN(litros) || litros <= 0) {
-        throw new Error('La cantidad debe ser un número positivo');
+export function agregarGasolina(surtidores, id, cantidad) {
+    let surtidor;
+
+    if (Array.isArray(surtidores)) {
+        surtidor = surtidores.find(s => s.id === id);
+    } else {
+        surtidor = surtidores[id];
     }
 
-    // Actualizar los litros
-    surtidores[idSurtidor].litros += litros;
-    
-    // Devolver el nuevo estado
-    return {
-        success: true,
-        nuevoTotal: surtidores[idSurtidor].litros,
-        message: `Se agregaron ${litros} litros al Surtidor ${idSurtidor}`
-    };
+    if (!surtidor) {
+        throw new Error(`Surtidor con ID ${id} no encontrado`);
+    }
+
+    if (isNaN(cantidad) || cantidad <= 0) {
+        throw new Error("Cantidad inválida");
+    }
+
+    if (typeof surtidor.litros !== 'number') {
+        console.warn(`Advertencia: surtidor ${id} tiene litros no numéricos (${surtidor.litros}). Inicializando a 0.`);
+        surtidor.litros = 0;
+    }
+
+    surtidor.litros += cantidad;
 }
+
 
 export function notificarCamionLlegado(callback) {
     if (typeof callback === "function") {

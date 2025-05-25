@@ -1,6 +1,7 @@
 import { gestionarSurtidoresFavoritos, notificarDisponibilidad } from "../src/gasolineraNotificaciones.js";
 
 describe("Notificaciones para surtidores favoritos", () => {
+    // Datos de prueba comunes
     const surtidores = [
         { id: 1, litros: 0, nombre: "Surtidor Premium" },
         { id: 2, litros: 100, nombre: "Surtidor Regular" },
@@ -9,6 +10,7 @@ describe("Notificaciones para surtidores favoritos", () => {
     const clienteId = "cliente-123";
 
     beforeEach(() => {
+        // Limpiar el estado antes de cada test
         gestionarSurtidoresFavoritos(clienteId, null, "limpiar");
     });
 
