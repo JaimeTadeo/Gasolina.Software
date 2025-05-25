@@ -9,7 +9,7 @@
         obtenerReporteFilas,
         notificarAdministrador
     } from "./src/gasolineraAdmin.js";
-    import { reportarSurtidorSinGasolina } from './src/reportarSurtidor.js';
+    import { reportarSurtidorSinGasolina,verificarDisponibilidadAlternativa  } from './src/reportarSurtidor.js';
     import { filtrarSurtidoresPorZona } from './src/gasolineraZona.js';
    import { gestionarSurtidoresFavoritos, notificarDisponibilidad, notificarArriboCamion } from './src/gasolineraNotificaciones.js';
     import { actualizarCombustible } from './src/gasolinera.js';
@@ -372,22 +372,24 @@ const inputLitrosDescargados = document.getElementById("litrosDescargados");
 
     actualizarEstadoCalificacionesUI(parseInt(selectSurtidorCalificacion.value));
 
-  document.querySelectorAll('.btn-reportar').forEach(boton => {
+document.querySelectorAll('.btn-reportar').forEach(boton => {
     boton.addEventListener('click', () => {
         const idSurtidor = parseInt(boton.dataset.surtidorId || boton.id.split('-')[2]);
         try {
-            // 1. Reportar el surtidor (esto establece litros=0)
+            // 1. Reportar el surtidor
             reportarSurtidorSinGasolina(surtidores, idSurtidor);
             // 2. Mostrar notificación
             displaySystemNotification(`Surtidor ${idSurtidor} reportado sin gasolina.`, 'warning');
             // 3. Notificar al administrador
             notificarAdministrador(`Admin reportó Surtidor ${idSurtidor} sin gasolina.`);
-            // 4. Verificar y mostrar alternativas
-            const alternativa = verificarDisponibilidadAlternativa(surtidores, idSurtidor);
-            if (alternativa.alternativoDisponible) {
-                displaySystemNotification(alternativa.mensaje, 'info');
+            // 4. Verificar alternativa (con comprobación segura)
+            if (typeof verificarDisponibilidadAlternativa === 'function') {
+                const alternativa = verificarDisponibilidadAlternativa(surtidores, idSurtidor);
+                if (alternativa.alternativoDisponible) {
+                    displaySystemNotification(alternativa.mensaje, 'info');
+                }
             }
-            // 5. Actualizar la vista de disponibilidad
+            // 5. Actualizar la vista
             renderizarSurtidores();
             actualizarAlertaSurtidoresUsuario();
         } catch (error) {
