@@ -8,7 +8,7 @@ import {
 
 } from "../src/gasolineraAdmin.js";
 
-
+import { actualizarCombustible } from '../src/gasolinera.js';
 
 describe("Sistema de calificaciones", () => {
     let surtidores;
@@ -53,4 +53,21 @@ describe("Sistema de calificaciones", () => {
             expect(resultado.personas).toBe(0);
         });
     });
+
+describe('actualizarCombustible', () => {
+    it('debería actualizar el combustible del surtidor correctamente', () => {
+        const surtidores = [ { id: 1, litros: 100 } ];
+        const resultado = actualizarCombustible(surtidores, 1, 50);
+        
+        expect(surtidores[0].litros).toBe(150);
+        expect(resultado).toContain('Combustible actualizado para Surtidor 1: 150 litros.');
+    });
+    
+    it('debería retornar un error si el surtidor no existe', () => {
+        const surtidores = [ { id: 1, litros: 100 } ];
+        const resultado = actualizarCombustible(surtidores, 99, 50);
+        
+        expect(resultado).toContain('Error: Surtidor con ID 99 no existe.');
+    });
+  });
 });

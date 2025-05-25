@@ -11,7 +11,8 @@
     } from "./src/gasolineraAdmin.js";
     import { reportarSurtidorSinGasolina } from './src/reportarSurtidor.js';
     import { filtrarSurtidoresPorZona } from './src/gasolineraZona.js';
-    import {  gestionarSurtidoresFavoritos, notificarDisponibilidad } from './src/gasolineraNotificaciones.js';
+   import { gestionarSurtidoresFavoritos, notificarDisponibilidad, notificarArriboCamion } from './src/gasolineraNotificaciones.js';
+    import { actualizarCombustible } from './src/gasolinera.js';
     const botonMostrarDisponibilidad = document.getElementById("mostrarDisponibilidad");
     const resultadoDiv = document.getElementById("resultado");
     const botonAgregarGasolina = document.getElementById("agregarGasolina");
@@ -20,7 +21,7 @@
     const errorAgregarGasolinaDiv = document.getElementById("error");
     const botonModificarHorario = document.getElementById("modificarHorario");
     const errorModificarHorarioDiv = document.getElementById("errorHorario");
-    const botonNotificarCamion = document.getElementById("notificarCamion");
+  const botonNotificarCamion = document.getElementById("notificarCamion");
     const inputPersonasEnFila = document.getElementById("numeroPersonas");
     const botonInformarFila = document.getElementById("informarFila");
     const mensajeConfirmacionFilaAdminDiv = document.getElementById("mensajeFila");
@@ -41,6 +42,8 @@
     const selectZona = document.getElementById("zonaSeleccionada");
     const botonFiltrarPorZona = document.getElementById("filtrarPorZona");
     const resultadoFiltroZonaDiv = document.getElementById("resultadoFiltroZona");
+   const inputSurtidorCamion = document.getElementById("surtidorCamionId");
+const inputLitrosDescargados = document.getElementById("litrosDescargados");
 
     let isAvailabilityShown = false;
 
@@ -65,55 +68,45 @@
         }
     };
 
-    function displaySystemNotification(message, type = 'info') {
-        const notificationElement = document.createElement("p");
-        notificationElement.classList.add("notification-item");
-        if (type === 'warning') notificationElement.classList.add('warning');
-        if (type === 'success') notificationElement.classList.add('success');
+ function displaySystemNotification(message, type = 'info') {
+    const notificationElement = document.createElement("p");
+    notificationElement.classList.add("notification-item");
 
-        if (message.includes("El camión de gasolina llegó")) {
-            message = "🚛 " + message;
-        }
-        if (message.includes("sin gasolina")) {
-            message = "⚠️ " + message;
-        }
+    // Estilos basados en el tipo de mensaje
+    if (type === 'warning') notificationElement.classList.add('warning');
+    if (type === 'success') notificationElement.classList.add('success');
 
-        notificationElement.textContent = `${new Date().toLocaleTimeString()}: ${message}`;
-
-        const maxNotifications = 5;
-        while (systemNotificationsDiv.children.length >= maxNotifications) {
-            systemNotificationsDiv.removeChild(systemNotificationsDiv.lastChild);
-        }
-
-        systemNotificationsDiv.prepend(notificationElement);
-
-        const initialMessage = systemNotificationsDiv.querySelector('p');
-        if (initialMessage && initialMessage.textContent === 'No hay notificaciones recientes.') {
-            systemNotificationsDiv.removeChild(initialMessage);
-        }
+    // Icono para mensajes de camión
+    if (message.includes("Camión")) {
+        message = `🚛 ${message}`;
     }
 
-    function renderizarSurtidores(filteredSurtidores = null) {
-        const dataToRender = filteredSurtidores || Object.entries(surtidores).map(([id, s]) => ({
-            id: parseInt(id),
-            litros: s.litros
-        }));
+    notificationElement.textContent = `${new Date().toLocaleTimeString()}: ${message}`;
+    systemNotificationsDiv.prepend(notificationElement);
 
-        const mensajes = gasolinera(true, dataToRender);
-
-        const targetDiv = filteredSurtidores ? resultadoFiltroZonaDiv : resultadoDiv;
-        targetDiv.innerHTML = "";
-        if (mensajes.length === 0) {
-            targetDiv.innerHTML = "<p>No hay surtidores disponibles en esta zona.</p>";
-            return;
-        }
-
-        mensajes.forEach(mensaje => {
-            const p = document.createElement("p");
-            p.textContent = mensaje;
-            targetDiv.appendChild(p);
-        });
+    // Limitar a 5 notificaciones
+    while (systemNotificationsDiv.children.length > 5) {
+        systemNotificationsDiv.removeChild(systemNotificationsDiv.lastChild);
     }
+}
+  function renderizarSurtidores(filteredSurtidores = null) {
+    const dataToRender = filteredSurtidores || Object.values(surtidores);
+    const mensajes = gasolinera(true, dataToRender);
+    
+    const targetDiv = filteredSurtidores ? resultadoFiltroZonaDiv : resultadoDiv;
+    targetDiv.innerHTML = "";
+    
+    if (mensajes.length === 0) {
+        targetDiv.innerHTML = "<p>No hay surtidores disponibles.</p>";
+        return;
+    }
+
+    mensajes.forEach(mensaje => {
+        const p = document.createElement("p");
+        p.textContent = mensaje;
+        targetDiv.appendChild(p);
+    });
+}
 
     function renderizarHorariosCliente() {
         horariosSurtidoresClienteDiv.innerHTML = "<h4>Horarios de Atención:</h4>";
@@ -250,6 +243,25 @@
         }
     }
 
+    export function manejarArriboCamion(surtidores, camion, callback) {
+    try {
+        // 1. Notificar el arribo (envía mensajes al sistema y usuarios)
+        notificarArriboCamion(surtidores, camion, callback);
+
+        // 2. Actualizar el combustible en el surtidor
+        actualizarCombustible(surtidores, camion.surtidorId, camion.litrosDescargados);
+
+        // 3. Actualizar la UI
+        renderizarSurtidores();
+        actualizarAlertaSurtidoresUsuario();
+
+    } catch (error) {
+        console.error("Error al manejar el arribo del camión:", error);
+        callback(`❌ Error: ${error.message}`);
+    }
+}
+
+
 
     botonMostrarDisponibilidad.addEventListener("click", () => {
         isAvailabilityShown = true;
@@ -279,12 +291,28 @@
         }
     });
 
-    botonNotificarCamion.addEventListener("click", () => {
-        notificarCamionLlegado((mensaje) => {
-            displaySystemNotification(mensaje, 'success');
-            notificarAdministrador(`Admin envió notificación a usuarios: "${mensaje}"`);
-        });
+  botonNotificarCamion.addEventListener("click", () => {
+    const surtidorId = parseInt(inputSurtidorCamion.value);
+    const litrosDescargados = parseFloat(inputLitrosDescargados.value);
+
+    if (isNaN(surtidorId) || isNaN(litrosDescargados) || litrosDescargados <= 0) {
+        displaySystemNotification("❌ Ingresa un ID de surtidor y litros válidos.", "warning");
+        return;
+    }
+
+    const camion = {
+        surtidorId,
+        litrosDescargados
+    };
+
+    notificarArriboCamion(Object.values(surtidores), camion, (mensaje) => {
+        displaySystemNotification(mensaje, "success");
+        renderizarSurtidores();
     });
+
+    inputSurtidorCamion.value = "";
+    inputLitrosDescargados.value = "";
+});
 
     botonModificarHorario.addEventListener("click", () => {
         const id = parseInt(document.getElementById("surtidorHorarioId").value);
@@ -344,14 +372,28 @@
 
     actualizarEstadoCalificacionesUI(parseInt(selectSurtidorCalificacion.value));
 
-    document.querySelectorAll('.btn-reportar').forEach(boton => {
+  document.querySelectorAll('.btn-reportar').forEach(boton => {
     boton.addEventListener('click', () => {
         const idSurtidor = boton.id.split('-')[2];
-        reportarSurtidorSinGasolina(idSurtidor);
-        displaySystemNotification(`Surtidor ${idSurtidor} reportado sin gasolina.`, 'warning');
-        notificarAdministrador(`Admin reportó Surtidor ${idSurtidor} sin gasolina.`);
+        
+        try {
+            // 1. Reportar el surtidor (esto ya establece litros=0)
+            reportarSurtidorSinGasolina(surtidores, idSurtidor);
+            
+            // 2. Mostrar notificación
+            displaySystemNotification(`Surtidor ${idSurtidor} reportado sin gasolina.`, 'warning');
+            
+            // 3. Notificar al administrador
+            notificarAdministrador(`Admin reportó Surtidor ${idSurtidor} sin gasolina.`);
+            
+            // 4. Actualizar la vista de disponibilidad
+            renderizarSurtidores();
+            
+        } catch (error) {
+            displaySystemNotification(`Error: ${error.message}`, 'warning');
+        }
     });
-    });
+});
 
     let miTicket = null;
     const usarTicketBtn = document.createElement('button');

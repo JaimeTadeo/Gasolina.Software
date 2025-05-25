@@ -19,3 +19,10 @@ export default function gasolinera(click, data) {
         }
     }
 }
+
+export function actualizarCombustible(surtidores, surtidorId, litros) {
+    const surtidor = surtidores.find(s => s.id === surtidorId);
+    if (!surtidor) return `Error: Surtidor con ID ${surtidorId} no existe.`;
+    surtidor.litros += litros;
+    return `Combustible actualizado para Surtidor ${surtidorId}: ${surtidor.litros} litros.`;
+}
