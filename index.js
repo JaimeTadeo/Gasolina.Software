@@ -498,7 +498,7 @@ function actualizarListaTicketsAdmin() {
     setInterval(actualizarReportesFilasUsuarioView, 30000);
 
 
-   botonMarcarFavorito.addEventListener("click", () => {
+ botonMarcarFavorito.addEventListener("click", () => {
     const clienteId = "cliente_1"; // Puedes hacer esto dinámico si tienes login
     const surtidorId = parseInt(selectSurtidorFavorito.value);
 
@@ -515,7 +515,7 @@ function actualizarListaTicketsAdmin() {
     }
 });
 
-  botonVerificarFavoritos.addEventListener("click", () => {
+botonVerificarFavoritos.addEventListener("click", () => {
     const clienteId = "cliente_1";
     
     try {
@@ -530,6 +530,7 @@ function actualizarListaTicketsAdmin() {
         mostrarNotificacion(error.message, 'error');
     }
 });
+
 
 function mostrarNotificacion(mensaje, tipo = 'info') {
     notificacionesFavoritosDiv.innerHTML = '';
