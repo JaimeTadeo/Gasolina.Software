@@ -21,7 +21,7 @@ import gasolinera from "./src/gasolinera.js";
     const botonMostrarDisponibilidad = document.getElementById("mostrarDisponibilidad");
     const resultadoDiv = document.getElementById("resultado");
     const botonAgregarGasolina = document.getElementById("agregarGasolina");
-    const inputSurtidorIdAdmin = document.getElementById("surtidorId");
+    const inputSurtidorIdAdmin = document.getElementById("surtidorSeleccionadoAgregar");
     const inputCantidadLitros = document.getElementById("cantidadLitros");
     const errorAgregarGasolinaDiv = document.getElementById("error");
     const botonModificarHorario = document.getElementById("modificarHorario");
