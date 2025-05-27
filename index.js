@@ -287,24 +287,24 @@ import gasolinera from "./src/gasolinera.js";
         });
     });
 
-    botonModificarHorario.addEventListener("click", () => {
-        const id = parseInt(document.getElementById("surtidorHorarioId").value);
-        const apertura = document.getElementById("nuevaApertura").value;
-        const cierre = document.getElementById("nuevoCierre").value;
+   botonModificarHorario.addEventListener("click", () => {
+    const id = parseInt(document.getElementById("surtidorHorario").value); // Cambiado a "surtidorHorario"
+    const apertura = document.getElementById("nuevaApertura").value;
+    const cierre = document.getElementById("nuevoCierre").value;
 
-        errorModificarHorarioDiv.textContent = "";
+    errorModificarHorarioDiv.textContent = "";
 
-        try {
-            modificarHorario(surtidores, id, apertura, cierre);
-            errorModificarHorarioDiv.style.color = "black";
-            errorModificarHorarioDiv.textContent = `Horario del Surtidor ${id} modificado exitosamente.`;
-            renderizarHorariosCliente();
+    try {
+        modificarHorario(surtidores, id, apertura, cierre);
+        errorModificarHorarioDiv.style.color = "black";
+        errorModificarHorarioDiv.textContent = `Horario del Surtidor ${id} modificado exitosamente.`;
+        renderizarHorariosCliente();
 
-        } catch (error) {
-            errorModificarHorarioDiv.textContent = error.message;
-            errorModificarHorarioDiv.style.color = "red";
-        }
-    });
+    } catch (error) {
+        errorModificarHorarioDiv.textContent = error.message;
+        errorModificarHorarioDiv.style.color = "red";
+    }
+});
 
     botonInformarFila.addEventListener("click", () => {
         const numero = parseInt(inputPersonasEnFila.value);

@@ -33,15 +33,13 @@ export function notificarCamionLlegado(callback) {
 }
 
 export function modificarHorario(surtidores, id, apertura, cierre) {
-    const surtidorIdString = String(id);
-
-    if (!surtidores[surtidorIdString]) {
+    if (!surtidores[id]) { // Usar id directamente (número)
         throw new Error(`Surtidor con ID ${id} no encontrado`);
     }
     if (apertura >= cierre) {
         throw new Error("El horario de apertura debe ser antes del de cierre");
     }
-    surtidores[surtidorIdString].horario = {
+    surtidores[id].horario = { // Usar id directamente (número)
         apertura,
         cierre
     };
