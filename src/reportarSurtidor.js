@@ -1,5 +1,5 @@
 /**
- * @param {object} surtidores 
+ * @param {object} surtidores
  * @param {number} idSurtidor
  * @returns {string} 
  */
@@ -21,19 +21,29 @@ export function reportarSurtidorSinGasolina(surtidores, idSurtidor) {
  * @returns {object} 
  */
 export function verificarDisponibilidadAlternativa(surtidores, idSurtidorReportado) {
+    const surtidorReportado = surtidores[idSurtidorReportado];
+    let mensajeBase = `El Surtidor ${idSurtidorReportado} está sin gasolina.`;
+
+    if (!surtidorReportado) {
+        return {
+            mensaje: `${mensajeBase} Actualmente no hay otros surtidores con gasolina.`,
+            alternativoDisponible: false
+        };
+    }
+
     const otrosSurtidores = Object.values(surtidores).filter(
         s => s.id !== parseInt(idSurtidorReportado) && s.litros > 0
     );
 
     if (otrosSurtidores.length > 0) {
-        const nombresAlternativos = otrosSurtidores.map(s => `Surtidor ${s.id}`).join(", ");
+        const nombresAlternativos = otrosSurtidores.map(s => `Surtidor ${s.id} (${s.nombre})`).join(", ");
         return {
-            mensaje: `El Surtidor ${idSurtidorReportado} está sin gasolina. Alternativas: ${nombresAlternativos} tienen gasolina.`,
+            mensaje: `${mensajeBase} Alternativas: ${nombresAlternativos} tienen gasolina.`,
             alternativoDisponible: true
         };
     } else {
         return {
-            mensaje: `El Surtidor ${idSurtidorReportado} está sin gasolina. Actualmente no hay otros surtidores con gasolina.`,
+            mensaje: `${mensajeBase} Actualmente no hay otros surtidores con gasolina.`,
             alternativoDisponible: false
         };
     }
