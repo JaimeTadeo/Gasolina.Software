@@ -1,4 +1,3 @@
-// Almacén de surtidores favoritos por cliente
 let surtidoresFavoritos = new Map();
 
 export function gestionarSurtidoresFavoritos(clienteId, surtidorId, accion) {
@@ -36,7 +35,6 @@ export function notificarDisponibilidad(surtidores, clienteId, callback) {
     return notificaciones;
 }
 
-// Función para resetear el estado en tests
 export function resetearEstado() {
     surtidoresFavoritos = new Map();
 }

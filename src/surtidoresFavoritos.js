@@ -1,16 +1,13 @@
 const favoritosPorUsuario = {};
 
 export function gestionarSurtidoresFavoritos(usuarioId, surtidorId, accion = 'agregar') {
-    // Validación de parámetros
     if (!usuarioId) throw new Error('Se requiere ID de usuario');
     if (![1, 2].includes(surtidorId)) throw new Error('ID de surtidor no válido');
 
-    // Inicializar array si no existe
     if (!favoritosPorUsuario[usuarioId]) {
         favoritosPorUsuario[usuarioId] = [];
     }
 
-    // Realizar la acción solicitada
     switch (accion) {
         case 'agregar':
             if (!favoritosPorUsuario[usuarioId].includes(surtidorId)) {
@@ -66,7 +63,6 @@ export function verificarDisponibilidadFavoritos(surtidores, usuarioId) {
     };
 }
 
-// Función para limpieza en tests
 export function _limpiarFavoritos() {
     Object.keys(favoritosPorUsuario).forEach(key => {
         delete favoritosPorUsuario[key];
